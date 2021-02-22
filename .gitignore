@@ -45,3 +45,9 @@ data-helpers
 
 # Configure files
 configure
+
+# Logos and branding
+logo.jpg
+
+# RMarkdown HTML outputs
+*.html
