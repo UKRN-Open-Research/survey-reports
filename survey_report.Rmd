@@ -7,6 +7,14 @@ output:
       theme: cosmo
 ---
 
+```{r logo, echo=FALSE}
+htmltools::img(src = knitr::image_uri(file.path("logo.jpg")), 
+               alt = 'UKRN logo', 
+               style = 'position:fixed; top:0; right:0; padding:25px 250px;')
+```
+
+---
+
 ```{r setup, include=FALSE}
 # R packages
 library(tidyverse)    # Tivdyverse packages
