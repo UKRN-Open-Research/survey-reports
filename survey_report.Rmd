@@ -1,0 +1,36 @@
+---
+title: "Open Research Survey: Interactive Report"
+author: "Emma Wilson"
+date: "22/02/2021"
+output: 
+    html_document:
+      theme: cosmo
+---
+
+```{r setup, include=FALSE}
+# R packages
+library(tidyverse)    # Tivdyverse packages
+# Functions
+source("functions/format_distribution.R") # Create a histogram of responses
+source("functions/format_leadership.R")   # Format MajorleadershipRole for graph
+source("functions/format_priority.R")     # Format OR area priority responses
+source("functions/format_training.R")     # Format training responses for graph
+source("functions/read_survey.R")         # Read in and format survey data
+# KnitR
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r data, include=FALSE}
+# Clean column text
+col_order <- read_csv("data-helpers/colOrder.csv")
+# MRC taxonomy
+mrc_group <- read_csv("data-helpers/mrcTaxonomy.csv")
+# Survey data
+# Read in survey data
+dat_mrc <- read_survey("data", "MRC") # MRC-funded institutions
+dat_uob <- read_survey("data", "UoB") # University of Bristol
+dat_bab <- read_survey("data", "Babraham") # Babraham Institute
+#Bind into one dataframe
+dat <- rbind(dat_mrc, dat_uob, dat_bab)
+```
+
