@@ -10,7 +10,7 @@ output:
 ```{r logo, echo=FALSE}
 htmltools::img(src = knitr::image_uri(file.path("logo.jpg")), 
                alt = 'UKRN logo', 
-               style = 'position:fixed; top:0; right:0; padding:25px 250px;')
+               style = 'position:absolute; top:0; right:0; padding:25px 250px;')
 ```
 
 ---
