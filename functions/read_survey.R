@@ -1,5 +1,6 @@
 # Assumes only latest data in in data-latest folder
 read_survey <- function(path, pattern){
+  
   fp = paste0(path, "/", list.files(path = path, pattern = pattern))
   df =  read.delim(fp, skip = 3, header = F, stringsAsFactors = FALSE, fileEncoding = 'UTF-16LE', na.strings = c("", NA)) %>%
     mutate(Unit = pattern)
@@ -16,6 +17,9 @@ read_survey <- function(path, pattern){
     colnames(df) <- col_order$cleanText
   }
   
+  # Remove previews, incomplete and spam from responses
+  df = df %>% filter(Progress == 100 & Status != "Survey Preview" & Status != "Spam")
+  
   # Add MRC taxonomy to replace Primary column
   if(df$Unit == "MRC"){
     df = df %>%
@@ -24,12 +28,18 @@ read_survey <- function(path, pattern){
       rename(Primary = UnitClean)
   }
   
-  # Change MRC data from Bristol school to UoB
-  df = df %>%
-    mutate(Unit = ifelse(Primary == "Health Sciences - Population Health Sciences", "UoB", Unit))
+  # If NA, change to Not Reported
+  df[is.na(df)] <- "Not Reported"
   
-  # Remove previews, incomplete and spam from responses
-  df = df %>% filter(Progress == 100 & Status != "Survey Preview" & Status != "Spam")
+  # Change MRC data from Bristol school to UoB
+   df = df %>%
+     mutate(Unit = ifelse(Primary == "Health Sciences - Population Health Sciences", "UoB", Unit))
+  
+  # Format research discipline
+  df = df %>%
+    mutate(Discipline = NA) %>%
+    mutate(Discipline = ifelse(Primary == "Physiological Systems" | Primary == "Molecular and Cellular" | Primary == "Babraham", "Life Sciences",
+                               ifelse(Primary == "Population and Public Health" | Primary == "Health Sciences - Population Health Sciences" | Primary == "Health Sciences - Translational Health Sciences" | Primary == "Health Sciences - Bristol Medical School" | Primary == "Health Sciences - Bristol Dental School" | Primary == "Health Sciences - Bristol Veterinary School", "Health Sciences", "Not Reported")))
   
   return(df)
 }
