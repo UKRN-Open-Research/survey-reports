@@ -7,10 +7,10 @@ output:
       theme: cosmo
 ---
 
-```{r data-select, include=FALSE}
-datSource <- c("Medical Research Council (MRC)-funded institutions", "The University of Bristol", "The Babraham Institute")
+```{r select, include=FALSE}
+# Choose the data to run the report on
+choose <- c("all", "mrc", "uob", "babraham")[1]
 ```
-
 
 ```{r logo, echo=FALSE}
 htmltools::img(src = knitr::image_uri(file.path("logo.jpg")), 
@@ -51,10 +51,17 @@ rm(col_order, dat_bab, dat_mrc, dat_uob, mrc_group)
 ```
 
 # Survey Data
-<!-- Tidy up this section so it's neater -->
-This report summarises survey responses from `r datSource[1]`, `r datSource[2]`, and `r datSource[3]`.
-A total of **`r nrow(dat)**` researchers responded to this survey.
 
-  * **`r nrow(dat %>% filter(Unit == "MRC"))`** (`r round((nrow(dat %>% filter(Unit == "MRC"))/nrow(dat))*100)`%) from `r datSource[1]`
-  * **`r nrow(dat %>% filter(Unit == "UoB"))`** (`r round((nrow(dat %>% filter(Unit == "UoB"))/nrow(dat))*100)`%) from `r datSource[2]`
-  * **`r nrow(dat %>% filter(Unit == "Babraham"))`** (`r round((nrow(dat %>% filter(Unit == "Babraham"))/nrow(dat))*100)`%) from `r datSource[3]`
+```{r, echo=FALSE, results='asis'}
+if(choose == "all"){
+  cat('This report summarises survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions, The University of Bristol, and The Babraham Institute.')
+} else if(choose == "mrc"){
+  cat('This report summarises survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions.')
+} else if(choose == "uob"){
+  cat('This report summarises survey responses from life and health sciences researchers at The University of Bristol.')
+} else if(choose == "babraham"){
+  cat('This report summarises survey responses from life sciences researchers at The Babraham Institute.')
+} else {
+  cat('Error: Please choose a valid data breakdown.')
+}
+```
