@@ -41,7 +41,6 @@ vignettes/*.pdf
 
 # Data folders
 data
-data-helpers
 
 # Configure files
 configure
