@@ -24,7 +24,11 @@ read_survey <- function(path, pattern){
       rename(Primary = UnitClean)
   }
   
-  # Remove previews, incomplete or spam from responses
+  # Change MRC data from Bristol school to UoB
+  df = df %>%
+    mutate(Unit = ifelse(Primary == "Health Sciences - Population Health Sciences", "UoB", Unit))
+  
+  # Remove previews, incomplete and spam from responses
   df = df %>% filter(Progress == 100 & Status != "Survey Preview" & Status != "Spam")
   
   return(df)
