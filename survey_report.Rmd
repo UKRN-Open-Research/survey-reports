@@ -38,30 +38,78 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 col_order <- read_csv("data-helpers/colOrder.csv")
 # MRC taxonomy
 mrc_group <- read_csv("data-helpers/mrcTaxonomy.csv")
-# Survey data
+
 # Read in survey data
 dat_mrc <- read_survey("data", "MRC") # MRC-funded institutions
 dat_uob <- read_survey("data", "UoB") # University of Bristol
 dat_bab <- read_survey("data", "Babraham") # Babraham Institute
-#Bind into one dataframe
+# Bind into one dataframe
 dat <- rbind(dat_mrc, dat_uob, dat_bab)
 
-#clear environment
+# Clear environment
 rm(col_order, dat_bab, dat_mrc, dat_uob, mrc_group)
+
+# Select relevant data
+if(choose == "all"){
+  dat <- dat
+} else if(choose == "mrc"){
+  dat <- filter(dat, Unit == "MRC")
+} else if(choose == "uob"){
+  dat <- filter(dat, Unit == "UoB")
+} else if(choose == "babraham"){
+  dat <- filter(dat, Unit == "Babraham")
+}
+
+# Format MajorLeadership Role Column
+dat <- format_leadership(dat)
 ```
 
 # Survey Data
+<!-- fix factors in graphs -->
 
 ```{r, echo=FALSE, results='asis'}
 if(choose == "all"){
-  cat('This report summarises survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions, The University of Bristol, and The Babraham Institute.')
+  # Number of responses text
+  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions, The University of Bristol, and The Babraham Institute. \n\n')
+  # Research domain / discipline
+  ggplot(dat, aes(x = factor(Unit))) +
+  geom_bar(aes(fill = Discipline)) +
+  scale_fill_manual(values = c("#28295B", "#4E4F86", "#9e9e9e")) +
+  ylim(0, nrow(dat)) +
+  theme(legend.position="bottom", legend.text = element_text(size = 7)) +
+  xlab("Organisation") + ylab("Number of Responses") +
+  theme(plot.title = element_text(hjust = 0.5))
 } else if(choose == "mrc"){
-  cat('This report summarises survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions.')
+  # Number of responses text
+  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions. \n\n')
+  # Research domain / discipline
+  ggplot(dat, aes(x = factor(Primary))) +
+  geom_bar(aes(fill = Discipline)) +
+  scale_fill_manual(values = c("#28295B", "#4E4F86", "#9e9e9e")) +
+  ylim(0, nrow(dat)) +
+  theme(legend.position="bottom", legend.text = element_text(size = 7)) +
+  xlab("Research Domain") + ylab("Number of Responses") +
+  theme(plot.title = element_text(hjust = 0.5))
 } else if(choose == "uob"){
-  cat('This report summarises survey responses from life and health sciences researchers at The University of Bristol.')
+  # Number of responses text
+  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at The University of Bristol.')
 } else if(choose == "babraham"){
-  cat('This report summarises survey responses from life sciences researchers at The Babraham Institute.')
+  # Number of responses text
+  cat('This report summarises', nrow(dat), 'survey responses from life sciences researchers at The Babraham Institute.')
 } else {
   cat('Error: Please choose a valid data breakdown.')
 }
 ```
+
+## Leadership Roles
+
+```{r leadership, echo=FALSE}
+count(dat, Leadership) %>%
+  ggplot(aes(x = Leadership, y = n)) +
+  geom_bar(fill = "#4E4F86", stat = "identity") +
+  ylim(0, nrow(dat)) +
+  xlab("Leadership role") + ylab("Number of Responses") +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
