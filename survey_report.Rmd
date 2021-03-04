@@ -90,7 +90,7 @@ p1 <- dat %>% group_by(Discipline) %>% count(Unit) %>%
   ylim(0, nrow(dat)) +
   theme(legend.position="right", legend.text = element_text(size = 7)) +
   xlab("Organisation\n(a)") + ylab("Number of Responses") +
-  geom_text(size = 3, position = position_stack(vjust = 0.5), color = "white") +
+  geom_text(aes(group = Discipline), size = 3, position = position_stack(vjust = 0.5), color = "white") +
   theme(plot.title = element_text(hjust = 0.5))
 
 p2 <- count(dat, Leadership) %>%
