@@ -1,7 +1,7 @@
 ---
 title: "Open Research Survey Report"
 author: "Emma Wilson"
-date: "22/02/2021"
+date: "`r Sys.Date()`"
 output: 
     html_document:
       theme: cosmo
@@ -62,58 +62,90 @@ if(choose == "all"){
   dat <- filter(dat, Unit == "Babraham")
 }
 
+# Discipline column factors
+dat$Discipline <- as.factor(dat$Discipline)
+
 # Format MajorLeadership Role Column
 dat <- format_leadership(dat)
 ```
 
 # Aim
-<!-- add aim of survey -->
+This survey aimed to investigate the engagement of health and life sciences researchers with open research practices and training. The results of this survey will be used to inform priorities for reseacher training in five different open research areas:
+
+  * Open access publishing
+  * Sharing of open code and materials
+  * Open data and data sharing
+  * Publishing preprints
+  * Preregistration and registered reports
 
 # Survey Data
+<!-- fix figure caption -->
+<!-- fix numbers - may be caused by factor levels? -->
 
-```{r, echo=FALSE, results='asis'}
-p1 <- ggplot(dat, aes(x = factor(Unit))) +
-  geom_bar(aes(fill = Discipline)) +
+```{r, echo=FALSE, results='asis', warning=FALSE, message=FALSE}
+p1 <- dat %>% group_by(Discipline) %>% count(Unit) %>%
+  ggplot(aes(x = Unit, y = n, label = n)) +
+  geom_bar(aes(fill = Discipline), stat = "identity") +
   scale_fill_manual(values = c("#28295B", "#4E4F86", "#9e9e9e")) +
   ylim(0, nrow(dat)) +
   theme(legend.position="right", legend.text = element_text(size = 7)) +
-  xlab("Organisation") + ylab("Number of Responses") +
+  xlab("Organisation\n(a)") + ylab("Number of Responses") +
+  geom_text(size = 3, position = position_stack(vjust = 0.5), color = "white") +
   theme(plot.title = element_text(hjust = 0.5))
 
 p2 <- count(dat, Leadership) %>%
-  ggplot(aes(x = Leadership, y = n)) +
+  ggplot(aes(x = Leadership, y = n, label = n)) +
+  geom_bar(fill = "#13A89E", stat = "identity") +
+  ylim(0, nrow(dat)) +
+  xlab("Leadership role\n(b)") + ylab("Number of Responses") +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
+  geom_text(size = 3, position = position_stack(vjust = 0.5), color = "white") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+p2_2 <- count(dat, Leadership) %>%
+  ggplot(aes(x = Leadership, y = n, label = n)) +
   geom_bar(fill = "#13A89E", stat = "identity") +
   ylim(0, nrow(dat)) +
   xlab("Leadership role") + ylab("Number of Responses") +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
+  geom_text(size = 3, position = position_stack(vjust = 0.5), color = "white") +
   theme(plot.title = element_text(hjust = 0.5))
 
 if(choose == "all"){
   # Number of responses text
   cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions, The University of Bristol, and The Babraham Institute. \n\n')
   # Plots
-  grid.arrange(p1, p2, nrow = 1, widths = c(3, 2))
+  grid.arrange(p1, p2, nrow = 1, widths = c(4, 2))
+  # Plot caption
+  cat('\n\nFigure 1: Breakdown of survey responses by organisation and research discipline (a) and number of respondents with a major leadership role (b). A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.\n\n')
 } else if(choose == "mrc"){
   # Number of responses text
   cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions. \n\n')
   # Plots
-  grid.arrange(p1, p2, nrow = 1, widths = c(3, 2))
+  grid.arrange(p1, p2, nrow = 1, widths = c(4, 2))
+  # Plot caption
+  cat('\n\nFigure 1: Breakdown of survey responses by organisation and research discipline (a) and number of respondents with a major leadership role (b). A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.\n\n')
 } else if(choose == "uob"){
   # Number of responses text
   cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at The University of Bristol.')
   # Plot
   grid.arrange(p2, nrow = 1, widths = c(2))
+  # Plot caption
+  cat('\n\nFigure 1: Breakdown of survey responses from researchers with a major leadership role. A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.\n\n')
 } else if(choose == "babraham"){
   # Number of responses text
   cat('This report summarises', nrow(dat), 'survey responses from life sciences researchers at The Babraham Institute.')
   # Plot
   grid.arrange(p2, nrow = 1, widths = c(2))
+  # Plot caption
+  cat('\n\nFigure 1: Breakdown of survey responses from researchers with a major leadership role. A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.\n\n')
 } else {
   cat('Error: Please choose a valid data breakdown.')
 }
 ```
 
 # Open Research Training
+Survey respondents were asked to describe their familiarity with the five open research areas, whether they thought they would find training useful, and if they thought their institution already provided sufficient training.
 
 ```{r training, include=FALSE}
 # Subset and format responses from those who want training
@@ -142,6 +174,7 @@ ggplot(dat_no_training, aes(x = factor(OR_Area))) +
 ```
 
 # Priority of Training Topics
+Survey respondents were asked to rank in order of priority the open research areas they think researchers would most benefit from. They could select from the five open research areas and up to 3 areas of their own choosing.
 
 ```{r priority, include=FALSE}
 priority_main <- format_priority(dat)
@@ -156,3 +189,10 @@ ggplot(priority_main, aes(x = priority_areas, y = priority_count)) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
+# Summary of Free Text Responses
+
+
+
+---
+
+[View code on GitHub](https://github.com/UKRN-Open-Research/survey-reports) | Download Survey Data
