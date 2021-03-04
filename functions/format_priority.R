@@ -4,7 +4,7 @@ format_priority <- function(df){
   df = df %>%
     select(Priority_OpenAccess, Priority_OpenCode, Priority_OpenData, Priority_Preprints, Priority_Preregistration, Priority_Other1, Priority_Other1_TEXT, Priority_Other2, Priority_Other2_TEXT, Priority_Other3, Priority_Other3_TEXT, Other_Description_TEXT) %>%
     mutate_if(is.integer, as.character) %>%
-    filter(!is.na(Priority_OpenAccess))
+    filter(!Priority_OpenAccess == "Not Reported")
   
   # Create vector of OR Areas
   priority_areas <- c("OpenAccess", "OpenCode", "OpenData", "Preprints", "Preregistration")
