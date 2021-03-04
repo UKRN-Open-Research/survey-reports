@@ -134,7 +134,7 @@ ggplot(dat_training, aes(x = factor(OR_Area))) +
 
 ggplot(dat_no_training, aes(x = factor(OR_Area))) +
   geom_bar(aes(fill = Response)) +
-  scale_fill_manual(values = c("#28295B", "#4E4F86", "#13A89E", "#9e9e9e", "#EC008C")) +
+  scale_fill_manual(values = c("#28295B", "#4E4F86", "#13A89E", "#EC008C")) +
   ylim(0, nrow(dat)) +
   theme(legend.position="bottom", legend.text = element_text(size = 6)) +
   xlab("OR Area") + ylab("Number of Responses") +
@@ -150,7 +150,7 @@ priority_main <- format_priority(dat)
 ```{r priority-plot, echo=FALSE}
 ggplot(priority_main, aes(x = priority_areas, y = priority_count)) +
   geom_col(aes(fill = priority_rank)) +
-  scale_fill_manual(values = c("#52d1b3", "#7adaf5", "#00a6f6", "#6c85e7", "#a163cf", "#9e9e9e")) +
+  scale_fill_manual(values = c("#28295B", "#4E4F86", "#13A89E", "#ed68b7", "#EC008C", "#9e9e9e")) +
   theme(legend.position="bottom") +
   ggtitle("All Organisations") + xlab("OR Areas") + ylab("Number of Respondents") +
   theme(plot.title = element_text(hjust = 0.5))
