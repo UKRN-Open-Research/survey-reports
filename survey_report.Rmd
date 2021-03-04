@@ -70,7 +70,6 @@ dat <- format_leadership(dat)
 <!-- add aim of survey -->
 
 # Survey Data
-<!-- fix factors in graphs -->
 
 ```{r, echo=FALSE, results='asis'}
 p1 <- ggplot(dat, aes(x = factor(Unit))) +
@@ -127,7 +126,7 @@ dat_no_training <- format_training(dat, training = "No")
 ```{r training-plot, echo=FALSE}
 ggplot(dat_training, aes(x = factor(OR_Area))) +
   geom_bar(aes(fill = Response)) +
-  scale_fill_manual(values = c("#52d1b3", "#7adaf5", "#a163cf", "#9e9e9e", "#FFFFFF")) +
+  scale_fill_manual(values = c("#28295B", "#4E4F86", "#13A89E", "#9e9e9e")) +
   ylim(0, nrow(dat)) +
   theme(legend.position="bottom", legend.text = element_text(size = 7)) +
   xlab("Open Research Area") + ylab("Number of Responses") +
@@ -135,7 +134,7 @@ ggplot(dat_training, aes(x = factor(OR_Area))) +
 
 ggplot(dat_no_training, aes(x = factor(OR_Area))) +
   geom_bar(aes(fill = Response)) +
-  scale_fill_manual(values = c("#52d1b3", "#7adaf5", "#a163cf", "#9e9e9e", "#FFFFFF")) +
+  scale_fill_manual(values = c("#28295B", "#4E4F86", "#13A89E", "#9e9e9e", "#EC008C")) +
   ylim(0, nrow(dat)) +
   theme(legend.position="bottom", legend.text = element_text(size = 6)) +
   xlab("OR Area") + ylab("Number of Responses") +
@@ -144,7 +143,7 @@ ggplot(dat_no_training, aes(x = factor(OR_Area))) +
 
 # Priority of Training Topics
 
-```{r}
+```{r priority, include=FALSE}
 priority_main <- format_priority(dat)
 ```
 
