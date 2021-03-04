@@ -22,6 +22,8 @@ htmltools::img(src = knitr::image_uri(file.path("logo.jpg")),
 
 ```{r setup, include=FALSE}
 # R packages
+library(grid)         # Plot arrangement
+library(gridExtra)    # Plot arrangement
 library(tidyverse)    # Tivdyverse packages
 # Functions
 source("functions/format_distribution.R") # Create a histogram of responses
@@ -64,52 +66,94 @@ if(choose == "all"){
 dat <- format_leadership(dat)
 ```
 
+# Aim
+<!-- add aim of survey -->
+
 # Survey Data
 <!-- fix factors in graphs -->
 
 ```{r, echo=FALSE, results='asis'}
+p1 <- ggplot(dat, aes(x = factor(Unit))) +
+  geom_bar(aes(fill = Discipline)) +
+  scale_fill_manual(values = c("#28295B", "#4E4F86", "#9e9e9e")) +
+  ylim(0, nrow(dat)) +
+  theme(legend.position="right", legend.text = element_text(size = 7)) +
+  xlab("Organisation") + ylab("Number of Responses") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+p2 <- count(dat, Leadership) %>%
+  ggplot(aes(x = Leadership, y = n)) +
+  geom_bar(fill = "#13A89E", stat = "identity") +
+  ylim(0, nrow(dat)) +
+  xlab("Leadership role") + ylab("Number of Responses") +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
+  theme(plot.title = element_text(hjust = 0.5))
+
 if(choose == "all"){
   # Number of responses text
   cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions, The University of Bristol, and The Babraham Institute. \n\n')
-  # Research domain / discipline
-  ggplot(dat, aes(x = factor(Unit))) +
-  geom_bar(aes(fill = Discipline)) +
-  scale_fill_manual(values = c("#28295B", "#4E4F86", "#9e9e9e")) +
-  ylim(0, nrow(dat)) +
-  theme(legend.position="bottom", legend.text = element_text(size = 7)) +
-  xlab("Organisation") + ylab("Number of Responses") +
-  theme(plot.title = element_text(hjust = 0.5))
+  # Plots
+  grid.arrange(p1, p2, nrow = 1, widths = c(3, 2))
 } else if(choose == "mrc"){
   # Number of responses text
   cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions. \n\n')
-  # Research domain / discipline
-  ggplot(dat, aes(x = factor(Primary))) +
-  geom_bar(aes(fill = Discipline)) +
-  scale_fill_manual(values = c("#28295B", "#4E4F86", "#9e9e9e")) +
-  ylim(0, nrow(dat)) +
-  theme(legend.position="bottom", legend.text = element_text(size = 7)) +
-  xlab("Research Domain") + ylab("Number of Responses") +
-  theme(plot.title = element_text(hjust = 0.5))
+  # Plots
+  grid.arrange(p1, p2, nrow = 1, widths = c(3, 2))
 } else if(choose == "uob"){
   # Number of responses text
   cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at The University of Bristol.')
+  # Plot
+  grid.arrange(p2, nrow = 1, widths = c(2))
 } else if(choose == "babraham"){
   # Number of responses text
   cat('This report summarises', nrow(dat), 'survey responses from life sciences researchers at The Babraham Institute.')
+  # Plot
+  grid.arrange(p2, nrow = 1, widths = c(2))
 } else {
   cat('Error: Please choose a valid data breakdown.')
 }
 ```
 
-## Leadership Roles
+# Open Research Training
 
-```{r leadership, echo=FALSE}
-count(dat, Leadership) %>%
-  ggplot(aes(x = Leadership, y = n)) +
-  geom_bar(fill = "#4E4F86", stat = "identity") +
+```{r training, include=FALSE}
+# Subset and format responses from those who want training
+dat_training <- format_training(dat, training = "Yes")
+
+# Subset and format responses from those who do not indicate they want training
+dat_no_training <- format_training(dat, training = "No")
+```
+
+```{r training-plot, echo=FALSE}
+ggplot(dat_training, aes(x = factor(OR_Area))) +
+  geom_bar(aes(fill = Response)) +
+  scale_fill_manual(values = c("#52d1b3", "#7adaf5", "#a163cf", "#9e9e9e", "#FFFFFF")) +
   ylim(0, nrow(dat)) +
-  xlab("Leadership role") + ylab("Number of Responses") +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
+  theme(legend.position="bottom", legend.text = element_text(size = 7)) +
+  xlab("Open Research Area") + ylab("Number of Responses") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(dat_no_training, aes(x = factor(OR_Area))) +
+  geom_bar(aes(fill = Response)) +
+  scale_fill_manual(values = c("#52d1b3", "#7adaf5", "#a163cf", "#9e9e9e", "#FFFFFF")) +
+  ylim(0, nrow(dat)) +
+  theme(legend.position="bottom", legend.text = element_text(size = 6)) +
+  xlab("OR Area") + ylab("Number of Responses") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+# Priority of Training Topics
+
+```{r}
+priority_main <- format_priority(dat)
+```
+
+```{r priority-plot, echo=FALSE}
+ggplot(priority_main, aes(x = priority_areas, y = priority_count)) +
+  geom_col(aes(fill = priority_rank)) +
+  scale_fill_manual(values = c("#52d1b3", "#7adaf5", "#00a6f6", "#6c85e7", "#a163cf", "#9e9e9e")) +
+  theme(legend.position="bottom") +
+  ggtitle("All Organisations") + xlab("OR Areas") + ylab("Number of Respondents") +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
