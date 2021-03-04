@@ -12,15 +12,12 @@ format_leadership <- function(df, MajorLeadershipRole){
   df$Leadership <- sub("I direct the School", "Yes", df$Leadership)
   df$Leadership <- sub("I direct the organisation", "Yes", df$Leadership)
   df$Leadership <- sub("Other", "Yes", df$Leadership)
-
-  # Replace NA
-  df$Leadership[is.na(df$Leadership)] <- "Not reported"
+  df$Leadership <- sub("Not Reported", "No", df$Leadership)
 
   # Change factor levels
   df$Leadership <- factor(df$Leadership,
                           levels = c("Yes",
-                                     "No",
-                                     "Not reported"))
+                                     "No"))
   
   return(df)
   
