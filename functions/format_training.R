@@ -9,11 +9,11 @@ format_training <- function(df, training){
       filter(grepl("I would find training on this useful", Response))
     
     # Format text responses by familiarity
-    df$Response <- replace(df$Response, grep("I already engage with this practice", df$Response), "Already engage in OR area")
-    df$Response <- replace(df$Response, grep("I am familiar with this concept", df$Response), "Familiar with OR area")
-    df$Response <- replace(df$Response, grep("I am NOT familiar with this concept", df$Response), "NOT familiar with OR area")
-    df$Response <- replace(df$Response, grep("I would find training on this useful", df$Response), "Unknown Familiarity")
-    df$Response <- replace(df$Response, grep("I think my organisation already provides sufficient training on this", df$Response), "Unknown Familiarity")
+    df$Response <- replace(df$Response, grep("I already engage with this practice", df$Response), "Already engage")
+    df$Response <- replace(df$Response, grep("I am familiar with this concept", df$Response), "Familiar")
+    df$Response <- replace(df$Response, grep("I am NOT familiar with this concept", df$Response), "Not familiar")
+    df$Response <- replace(df$Response, grep("I would find training on this useful", df$Response), "Unknown familiarity")
+    df$Response <- replace(df$Response, grep("I think my organisation already provides sufficient training on this", df$Response), "Unknown familiarity")
     
     return(df)
     
@@ -27,10 +27,10 @@ format_training <- function(df, training){
       filter(!Response == "Not Reported")
     
     # Format text responses by organisation provides and/or familiarity
-    df$Response <- replace(df$Response, grep("I think my organisation already provides sufficient training on this", df$Response), "Organisation provides sufficient training")
-    df$Response <- replace(df$Response, grep("I already engage with this practice", df$Response), "Already engage with OR area")
-    df$Response <- replace(df$Response, grep("I am familiar with this concept", df$Response), "I am familiar with this concept")
-    df$Response <- replace(df$Response, grep("I am NOT familiar with this concept", df$Response), "NOT familiar with OR area")
+    df$Response <- replace(df$Response, grep("I think my organisation already provides sufficient training on this", df$Response), "Training provided")
+    df$Response <- replace(df$Response, grep("I already engage with this practice", df$Response), "Already engage")
+    df$Response <- replace(df$Response, grep("I am familiar with this concept", df$Response), "Familiar")
+    df$Response <- replace(df$Response, grep("I am NOT familiar with this concept", df$Response), "Not familiar")
     
     return(df)
     
