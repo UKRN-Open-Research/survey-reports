@@ -24,6 +24,7 @@ htmltools::img(src = knitr::image_uri(file.path("logo.jpg")),
 # R packages
 library(grid)         # Plot arrangement
 library(gridExtra)    # Plot arrangement
+library(forcats)      # For factor reverse
 library(tidyverse)    # Tivdyverse packages
 # Functions
 source("functions/format_distribution.R") # Create a histogram of responses
@@ -79,14 +80,12 @@ This survey aimed to investigate the engagement of health and life sciences rese
   * Preregistration and registered reports
 
 # Survey Data
-<!-- fix figure caption -->
-<!-- fix numbers - may be caused by factor levels? -->
 
 ```{r, echo=FALSE, results='asis', warning=FALSE, message=FALSE}
 p1 <- dat %>% group_by(Discipline) %>% count(Unit) %>%
   ggplot(aes(x = Unit, y = n, label = n)) +
   geom_bar(aes(fill = Discipline), stat = "identity") +
-  scale_fill_manual(values = c("#28295B", "#4E4F86", "#9e9e9e")) +
+  scale_fill_manual(values = c("#28295B", "#4E4F86", "#6e6e6e")) +
   ylim(0, nrow(dat)) +
   theme(legend.position="right", legend.text = element_text(size = 7)) +
   xlab("Organisation\n(a)") + ylab("Number of Responses") +
@@ -117,28 +116,28 @@ if(choose == "all"){
   # Plots
   grid.arrange(p1, p2, nrow = 1, widths = c(4, 2))
   # Plot caption
-  cat('\n\nFigure 1: Breakdown of survey responses by organisation and research discipline (a) and number of respondents with a major leadership role (b). A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.\n\n')
+  cat('\n\n<em><b>Figure 1:</b> Breakdown of survey responses by organisation and research discipline (a) and number of respondents with a major leadership role (b). A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.</em>\n\n')
 } else if(choose == "mrc"){
   # Number of responses text
   cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions. \n\n')
   # Plots
   grid.arrange(p1, p2, nrow = 1, widths = c(4, 2))
   # Plot caption
-  cat('\n\nFigure 1: Breakdown of survey responses by organisation and research discipline (a) and number of respondents with a major leadership role (b). A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.\n\n')
+  cat('\n\n<em><b>Figure 1:</b> Breakdown of survey responses by organisation and research discipline (a) and number of respondents with a major leadership role (b). A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.</em>\n\n')
 } else if(choose == "uob"){
   # Number of responses text
   cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at The University of Bristol.')
   # Plot
   grid.arrange(p2, nrow = 1, widths = c(2))
   # Plot caption
-  cat('\n\nFigure 1: Breakdown of survey responses from researchers with a major leadership role. A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.\n\n')
+  cat('\n\n<em><b>Figure 1:</b> Breakdown of survey responses from researchers with a major leadership role. A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.</em>\n\n')
 } else if(choose == "babraham"){
   # Number of responses text
   cat('This report summarises', nrow(dat), 'survey responses from life sciences researchers at The Babraham Institute.')
   # Plot
   grid.arrange(p2, nrow = 1, widths = c(2))
   # Plot caption
-  cat('\n\nFigure 1: Breakdown of survey responses from researchers with a major leadership role. A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.\n\n')
+  cat('\n\n<em><b>Figure 1:</b> Breakdown of survey responses from researchers with a major leadership role. A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.</em>\n\n')
 } else {
   cat('Error: Please choose a valid data breakdown.')
 }
@@ -147,31 +146,45 @@ if(choose == "all"){
 # Open Research Training
 Survey respondents were asked to describe their familiarity with the five open research areas, whether they thought they would find training useful, and if they thought their institution already provided sufficient training.
 
+<!-- fix numbers of graph -->
+
 ```{r training, include=FALSE}
 # Subset and format responses from those who want training
-dat_training <- format_training(dat, training = "Yes")
+dat_training <- format_training(dat, training = "Yes") %>%
+  mutate(Training = "Yes")
 
 # Subset and format responses from those who do not indicate they want training
-dat_no_training <- format_training(dat, training = "No")
+dat_no_training <- format_training(dat, training = "No") %>%
+  mutate(Training = "No")
+
+dat_all_training <- rbind(dat_training, dat_no_training) %>%
+  select(OR_Area, Response, Training)
+
+# Factor levels
+dat_all_training$Response <- factor(dat_all_training$Response,
+                                    levels = c("Already engage",
+                                               "Familiar",
+                                               "Not familiar",
+                                               "Unknown familiarity",
+                                               "Training provided"))
+
 ```
 
 ```{r training-plot, echo=FALSE}
-ggplot(dat_training, aes(x = factor(OR_Area))) +
-  geom_bar(aes(fill = Response)) +
-  scale_fill_manual(values = c("#28295B", "#4E4F86", "#13A89E", "#9e9e9e")) +
-  ylim(0, nrow(dat)) +
+dat_all_training %>% group_by(OR_Area, Training) %>% count(Response) %>%
+  ggplot(aes(x = Training, y = n, label = n))+
+  geom_bar(aes(fill = Response), stat = "identity", position = "stack") +
+  facet_grid(~ OR_Area) +
+  scale_fill_manual(values = c("#28295B", "#4E4F86", "#EC008C", "#6e6e6e", "#13A89E")) +
   theme(legend.position="bottom", legend.text = element_text(size = 7)) +
-  xlab("Open Research Area") + ylab("Number of Responses") +
-  theme(plot.title = element_text(hjust = 0.5))
-
-ggplot(dat_no_training, aes(x = factor(OR_Area))) +
-  geom_bar(aes(fill = Response)) +
-  scale_fill_manual(values = c("#28295B", "#4E4F86", "#13A89E", "#EC008C")) +
-  ylim(0, nrow(dat)) +
-  theme(legend.position="bottom", legend.text = element_text(size = 6)) +
-  xlab("OR Area") + ylab("Number of Responses") +
-  theme(plot.title = element_text(hjust = 0.5))
+  xlab("Would Find Training Useful") + ylab("Number of Responses") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  geom_text(aes(group = OR_Area, Training), size = 3, position = position_stack(vjust = 0.5), color = "white")
 ```
+
+<em><b>Figure 2:</b> Breakdown of responses related to training in the five open research areas.</em>
+
+<!-- Include logic in figure caption -->
 
 # Priority of Training Topics
 Survey respondents were asked to rank in order of priority the open research areas they think researchers would most benefit from. They could select from the five open research areas and up to 3 areas of their own choosing.
@@ -180,14 +193,20 @@ Survey respondents were asked to rank in order of priority the open research are
 priority_main <- format_priority(dat)
 ```
 
+<!-- fix numbers of graph -->
+<!-- fix figure legend -->
+
 ```{r priority-plot, echo=FALSE}
-ggplot(priority_main, aes(x = priority_areas, y = priority_count)) +
+ggplot(priority_main, aes(x = priority_areas, y = priority_count, label = priority_count)) +
   geom_col(aes(fill = priority_rank)) +
-  scale_fill_manual(values = c("#28295B", "#4E4F86", "#13A89E", "#ed68b7", "#EC008C", "#9e9e9e")) +
-  theme(legend.position="bottom") +
-  ggtitle("All Organisations") + xlab("OR Areas") + ylab("Number of Respondents") +
-  theme(plot.title = element_text(hjust = 0.5))
+  scale_fill_manual(values = c("#28295B", "#4E4F86", "#13A89E", "#ed68b7", "#EC008C", "#6e6e6e")) +
+  theme(legend.position="right") +
+  xlab("OR Areas") + ylab("Number of Respondents") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  geom_text(size = 3, position = position_stack(vjust = 0.5), color = "white")
 ```
+
+<em><b>Figure 3: </b>Priority ranking of each of the five open research areas. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
 
 # Summary of Free Text Responses
 
