@@ -22,9 +22,9 @@ htmltools::img(src = knitr::image_uri(file.path("logo.jpg")),
 
 ```{r setup, include=FALSE}
 # R packages
+library(forcats)      # For factor reverse
 library(grid)         # Plot arrangement
 library(gridExtra)    # Plot arrangement
-library(forcats)      # For factor reverse
 library(tidyverse)    # Tidyverse packages
 # Functions
 source("functions/format_distribution.R")       # Create a histogram of responses
@@ -202,7 +202,9 @@ priority %>% group_by(OR_Area) %>% count(Rank) %>%
   geom_text(aes(group = OR_Area, label = n), size = 3, position = position_stack(vjust = 0.5, reverse = FALSE), color = "white")
 ```
 
-<em><b>Figure 3: </b>Priority ranking of each of the five open research areas. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
+<em><b>Figure 3: </b>Priority ranking of each of the five open research areas. 1 is highest priority and 8 is lowest. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
+
+A graph showing how the subset of respondents who said they would find Open Research training useful ranked the priority of research training in that area is shown in figure 4.
 
 ```{r priority-training-plot, echo=FALSE}
 priority_training %>% group_by(OR_Area) %>% count(Rank) %>%
@@ -215,6 +217,8 @@ priority_training %>% group_by(OR_Area) %>% count(Rank) %>%
   theme(plot.title = element_text(hjust = 0.5)) +
   geom_text(aes(group = OR_Area, label = n), size = 3, position = position_stack(vjust = 0.5, reverse = FALSE), color = "white")
 ```
+
+<em><b>Figure 4: </b>Priority ranking of each of the five open research areas, subsetted to only show responses from researchers who would find training in each area useful. 1 is highest priority and 8 is lowest. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
 
 # Summary of Free Text Responses
 
