@@ -6,7 +6,8 @@ format_training <- function(df, training){
     df = df %>%
       select(OpenAccess, OpenCode, OpenData, Preprints, Preregistration, Primary, Unit, randomID) %>%
       pivot_longer(cols = OpenAccess:Preregistration, names_to = "OR_Area", values_to = "Response") %>%
-      filter(grepl("I would find training on this useful", Response))
+      filter(grepl("I would find training on this useful", Response)) %>%
+      mutate(Training = "Yes")
     
     # Format text responses by familiarity
     df$Response <- replace(df$Response, grep("I already engage with this practice", df$Response), "Already engage")
@@ -24,7 +25,8 @@ format_training <- function(df, training){
       select(OpenAccess, OpenCode, OpenData, Preprints, Preregistration, Primary, Unit, randomID) %>%
       pivot_longer(cols = OpenAccess:Preregistration, names_to = "OR_Area", values_to = "Response") %>%
       filter(!grepl("I would find training on this useful", Response)) %>%
-      filter(!Response == "Not Reported")
+      filter(!Response == "Not Reported") %>%
+      mutate(Training = "No")
     
     # Format text responses by organisation provides and/or familiarity
     df$Response <- replace(df$Response, grep("I think my organisation already provides sufficient training on this", df$Response), "Training provided")
