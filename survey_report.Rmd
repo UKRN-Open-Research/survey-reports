@@ -1,5 +1,5 @@
 ---
-title: "Open Research Survey Report"
+title: "Open Research Survey Report <img src=\"logo.jpg\" alt=\"UKRN logo\" style = \"float: right; \"/>"
 author: "Emma Wilson"
 date: "`r Sys.Date()`"
 output: 
@@ -10,12 +10,6 @@ output:
 ```{r select, include=FALSE}
 # Choose the data to run the report on
 choose <- c("all", "mrc", "uob", "babraham")[1]
-```
-
-```{r logo, echo=FALSE}
-htmltools::img(src = knitr::image_uri(file.path("logo.jpg")), 
-               alt = 'UKRN logo', 
-               style = 'position:absolute; top:0; right:0; padding:25px 250px;')
 ```
 
 ---
@@ -226,7 +220,6 @@ priority_training %>% group_by(OR_Area) %>% count(Rank) %>%
 <em><b>Figure 4: </b>Priority ranking of each of the five open research areas, subsetted to only show responses from researchers who would find training in each area useful. 1 is highest priority and 8 is lowest. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
 
 # Summary of Free Text Responses
-
 
 
 ---
