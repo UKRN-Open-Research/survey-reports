@@ -26,6 +26,11 @@ library(forcats)      # For factor reverse
 library(grid)         # Plot arrangement
 library(gridExtra)    # Plot arrangement
 library(tidyverse)    # Tidyverse packages
+# Icons
+remotes::install_github("mitchelloharawild/icons")
+library(icons)
+download_fontawesome()
+download_academicons()
 # Functions
 source("functions/format_distribution.R")       # Create a histogram of responses
 source("functions/format_leadership.R")         # Format MajorleadershipRole for graph
@@ -226,4 +231,4 @@ priority_training %>% group_by(OR_Area) %>% count(Rank) %>%
 
 ---
 
-[View code on GitHub](https://github.com/UKRN-Open-Research/survey-reports) | Download Survey Data
+[`r fontawesome("github")` GitHub repository](https://github.com/UKRN-Open-Research/survey-reports) | `r academicons("open-data")` Survey data
