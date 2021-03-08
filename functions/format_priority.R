@@ -2,7 +2,7 @@ format_priority <- function(df){
   
   # Subset responses to priority questions
   df = df %>%
-    select(Priority_OpenAccess, Priority_OpenCode, Priority_OpenData, Priority_Preprints, Priority_Preregistration) %>%
+    select(Priority_OpenAccess, Priority_OpenCode, Priority_OpenData, Priority_Preprints, Priority_Preregistration, randomID) %>%
     mutate_if(is.integer, as.character) %>%
     filter(!Priority_OpenAccess == "Not Reported")
   
@@ -15,7 +15,7 @@ format_priority <- function(df){
   
   # Wide to long format for plotting
   df = df %>%
-    pivot_longer(everything(), names_to = "OR_Area", values_to = "Rank")
+    pivot_longer(!randomID, names_to = "OR_Area", values_to = "Rank")
   
   # Remove prefix
   df$OR_Area <- sub("Priority_", "", df$OR_Area)
