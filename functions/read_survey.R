@@ -38,7 +38,7 @@ read_survey <- function(path, pattern){
   # Format research discipline
   df = df %>%
     mutate(Discipline = NA) %>%
-    mutate(Discipline = ifelse(Primary == "Physiological Systems" | Primary == "Molecular and Cellular" | Primary == "Babraham", "Life Sciences",
+    mutate(Discipline = ifelse(Primary == "Physiological Systems" | Primary == "Molecular and Cellular" | Primary == "Babraham" | Primary == "Life Sciences - School of Biological Sciences" | Primary == "Life Sciences - School of Biochemistry" | Primary == "Life Sciences - School of Psychological Science", "Life Sciences",
                                ifelse(Primary == "Population and Public Health" | Primary == "Health Sciences - Population Health Sciences" | Primary == "Health Sciences - Translational Health Sciences" | Primary == "Health Sciences - Bristol Medical School" | Primary == "Health Sciences - Bristol Dental School" | Primary == "Health Sciences - Bristol Veterinary School", "Health Sciences", "Not Reported")))
   
   return(df)
