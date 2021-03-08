@@ -69,7 +69,25 @@ dat$Discipline <- as.factor(dat$Discipline)
 # Format MajorLeadership Role Column
 dat <- format_leadership(dat)
 
-# Create dataframe of topics anked by priority
+# Subset and format responses from those who want training
+dat_training <- format_training(dat, training = "Yes")
+
+# Subset and format responses from those who do not indicate they want training
+dat_no_training <- format_training(dat, training = "No")
+
+# Bind datasets together
+dat_all_training <- rbind(dat_training, dat_no_training) %>%
+  select(OR_Area, Response, Training)
+
+# Factor levels
+dat_all_training$Response <- factor(dat_all_training$Response,
+                                    levels = c("Training provided",
+                                               "Unknown familiarity",
+                                               "Not familiar",
+                                               "Familiar",
+                                               "Already engage"))
+
+# Create dataframe of topics ranked by priority
 priority <- format_priority(dat)
 ```
 
@@ -148,27 +166,6 @@ if(choose == "all"){
 
 # Open Research Training
 Survey respondents were asked to describe their familiarity with the five open research areas, whether they thought they would find training useful, and if they thought their institution already provided sufficient training.
-
-<!-- fix numbers of graph -->
-
-```{r training, include=FALSE}
-# Subset and format responses from those who want training
-dat_training <- format_training(dat, training = "Yes")
-
-# Subset and format responses from those who do not indicate they want training
-dat_no_training <- format_training(dat, training = "No")
-
-dat_all_training <- rbind(dat_training, dat_no_training) %>%
-  select(OR_Area, Response, Training)
-
-# Factor levels
-dat_all_training$Response <- factor(dat_all_training$Response,
-                                    levels = c("Training provided",
-                                               "Unknown familiarity",
-                                               "Not familiar",
-                                               "Familiar",
-                                               "Already engage"))
-```
 
 ```{r training-plot, echo=FALSE}
 dat_all_training %>% group_by(OR_Area, Training) %>% count(Response) %>%   
