@@ -68,6 +68,9 @@ dat$Discipline <- as.factor(dat$Discipline)
 
 # Format MajorLeadership Role Column
 dat <- format_leadership(dat)
+
+# Create dataframe of topics anked by priority
+priority <- format_priority(dat)
 ```
 
 # Aim
@@ -150,12 +153,10 @@ Survey respondents were asked to describe their familiarity with the five open r
 
 ```{r training, include=FALSE}
 # Subset and format responses from those who want training
-dat_training <- format_training(dat, training = "Yes") %>%
-  mutate(Training = "Yes")
+dat_training <- format_training(dat, training = "Yes")
 
 # Subset and format responses from those who do not indicate they want training
-dat_no_training <- format_training(dat, training = "No") %>%
-  mutate(Training = "No")
+dat_no_training <- format_training(dat, training = "No")
 
 dat_all_training <- rbind(dat_training, dat_no_training) %>%
   select(OR_Area, Response, Training)
@@ -187,40 +188,6 @@ dat_all_training %>% group_by(OR_Area, Training) %>% count(Response) %>%
 
 # Priority of Training Topics
 Survey respondents were asked to rank in order of priority the open research areas they think researchers would most benefit from. They could select from the five open research areas and up to 3 areas of their own choosing.
-
-```{r priority, include=FALSE}
-priority_main <- format_priority(dat)
-
-priority_main$priority_count <- as.factor(priority_main$priority_count)
-
-priority <- dat %>%
-    select(Priority_OpenAccess, Priority_OpenCode, Priority_OpenData, Priority_Preprints, Priority_Preregistration) %>%
-    mutate_if(is.integer, as.character) %>%
-    filter(!Priority_OpenAccess == "Not Reported")
-
-priority$Priority_OpenAccess <- sub("6|7|8", "6-8", priority$Priority_OpenAccess)
-priority$Priority_OpenCode <- sub("6|7|8", "6-8", priority$Priority_OpenCode)
-priority$Priority_OpenData <- sub("6|7|8", "6-8", priority$Priority_OpenData)
-priority$Priority_Preprints <- sub("6|7|8", "6-8", priority$Priority_Preprints)
-priority$Priority_Preregistration <- sub("6|7|8", "6-8", priority$Priority_Preregistration)
-
-priority <- priority %>%
-  pivot_longer(everything(), names_to = "OR_Area", values_to = "Rank")
-
-priority$OR_Area <- sub("Priority_", "", priority$OR_Area)
-
-# Factor levels
-priority$Rank <- factor(priority$Rank,
-                        levels = c("6-8",
-                                   "5",
-                                   "4",
-                                   "3",
-                                   "2",
-                                   "1"))
-```
-
-<!-- fix numbers of graph -->
-<!-- fix figure legend -->
 
 ```{r priority-plot, echo=FALSE}
 priority %>% group_by(OR_Area) %>% count(Rank) %>%
