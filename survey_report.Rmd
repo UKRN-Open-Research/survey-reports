@@ -27,11 +27,12 @@ library(gridExtra)    # Plot arrangement
 library(forcats)      # For factor reverse
 library(tidyverse)    # Tidyverse packages
 # Functions
-source("functions/format_distribution.R") # Create a histogram of responses
-source("functions/format_leadership.R")   # Format MajorleadershipRole for graph
-source("functions/format_priority.R")     # Format OR area priority responses
-source("functions/format_training.R")     # Format training responses for graph
-source("functions/read_survey.R")         # Read in and format survey data
+source("functions/format_distribution.R")       # Create a histogram of responses
+source("functions/format_leadership.R")         # Format MajorleadershipRole for graph
+source("functions/format_priority.R")           # Format OR area priority responses
+source("functions/format_priority_training.R")  # Format OR area priority responses (subset)
+source("functions/format_training.R")           # Format training responses for graph
+source("functions/read_survey.R")               # Read in and format survey data
 # KnitR
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
@@ -89,6 +90,9 @@ dat_all_training$Response <- factor(dat_all_training$Response,
 
 # Create dataframe of topics ranked by priority
 priority <- format_priority(dat)
+
+# Subset only responses from those who would find training useful
+priority_training <- format_priority_training(priority, dat_training)
 ```
 
 # Aim
@@ -199,6 +203,18 @@ priority %>% group_by(OR_Area) %>% count(Rank) %>%
 ```
 
 <em><b>Figure 3: </b>Priority ranking of each of the five open research areas. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
+
+```{r priority-training-plot, echo=FALSE}
+priority_training %>% group_by(OR_Area) %>% count(Rank) %>%
+  ggplot(aes(x = OR_Area, y = n, fill = forcats::fct_rev(Rank))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_fill_manual(name = "Rank", 
+                    values = c("#28295B", "#4E4F86", "#13A89E", "#ed68b7", "#EC008C", "#6e6e6e")) +
+  theme(legend.position="right") +
+  xlab("Open Research Areas") + ylab("Number of Responses") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  geom_text(aes(group = OR_Area, label = n), size = 3, position = position_stack(vjust = 0.5, reverse = FALSE), color = "white")
+```
 
 # Summary of Free Text Responses
 
