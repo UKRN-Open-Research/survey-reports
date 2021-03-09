@@ -98,8 +98,8 @@ priority_training <- format_priority_training(priority, dat_training)
 This survey aimed to investigate the engagement of health and life sciences researchers with open research practices and training. The results of this survey will be used to inform priorities for researcher training in five different open research areas:
 
   * Open access publishing
-  * Sharing of open code and materials
-  * Open data and data sharing
+  * Sharing of code and materials
+  * Data sharing
   * Publishing preprints
   * Preregistration and registered reports
 
@@ -232,7 +232,7 @@ priority %>% group_by(OR_Area) %>% count(Rank) %>%
 
 <em><b>Figure 3: Priority ranking of each of the five open research areas.</b> 1 is the highest priority and 8 is the lowest. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
 
-A graph showing how the subset of respondents who said they would find Open Research training useful ranked the priority of research training in that area is shown in figure 4.
+A graph showing how the subset of respondents who said they would find open research training useful ranked the priority of research training in that area is shown in figure 4.
 
 ```{r priority-training-plot, echo=FALSE}
 priority_training %>% group_by(OR_Area) %>% count(Rank) %>%
@@ -298,4 +298,4 @@ Some respondents challenged the worthwhileness of some of our training topics, m
 
 ---
 
-[`r fontawesome("github")` GitHub repository](https://github.com/UKRN-Open-Research/survey-reports) &nbsp;&nbsp; | &nbsp;&nbsp; `r academicons("open-data")` Survey data
+[`r fontawesome("github")` &nbsp; GitHub repository](https://github.com/UKRN-Open-Research/survey-reports) &nbsp;&nbsp; | &nbsp;&nbsp; `r academicons("open-data")` &nbsp; Survey data
