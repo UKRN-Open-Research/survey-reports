@@ -268,7 +268,7 @@ Free text responses given in the survey are summarised below. These responses ar
 ## Culture, leadership and institutional requirements
 Many responses complained of a lack of institutional or direct managerial leadership, or of a culture where open research was not valued. Respondents requested that their institutions provided: a) guidance on licensing, archiving data, etc.; b) direct financial support for e.g. sharing data.; c) policies endorsing the use of free and open software tools; and d) training on open research practices. Several respondents requested that project leaders be specifically trained in open research methods so that they could appreciate the value and accept the time taken to implement them. Some respondents praised institutional leadership where it supported Open Access publishing. Some respondents showed that institution induction processes overlooked open research practices as a component in the on-boarding process.
 
-## Systemtic issues
+## Systemic issues
 Many responses complained that open research practices take time to implement, that they have limited time to attend training courses, and that open research practices are not incentivised by funders, publishers, or their institutions. Several responses also said that open research practices can be costly e.g. open access publishing, but they do not want to fund closed-access journals.
 
 ## Confusion over open research terms
