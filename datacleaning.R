@@ -31,4 +31,4 @@ rm(col_order, dat_bab, dat_mrc, dat_uob, mrc_group)
 
 # --- REMOVE NOT REQUIRED COLUMNS -------------------------------------------------------------
 
-dat <- select(dat, -Status, -Finished, -ResponseId, -DistributionChannel, -UserLanguage)
+dat <- select(dat, -Progress, -Status, -Finished, -ResponseId, -DistributionChannel, -UserLanguage)
