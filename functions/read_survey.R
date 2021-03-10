@@ -17,12 +17,18 @@ read_survey <- function(path, pattern){
     colnames(df) <- col_order$cleanText
   }
   
+  # Remove trailing white space from Primary column
+  df$Primary = trimws(df$Primary, which = "right", whitespace = "[ \t\r\n]")
+  
   # Remove previews, incomplete and spam from responses
   df = df %>% filter(Progress == 100 & Status != "Survey Preview" & Status != "Spam")
   
   # Change MRC data from Bristol school to UoB
   df = df %>%
     mutate(Unit = ifelse(Primary == "MRC Integrative Epidemiology Unit at the University of Bristol (MRC IEU)", "UoB", Unit))
+  
+  # Format UoB list rest
+  df$Primary <- sub("MRC Integrative Epidemiology Unit at the University of Bristol \\(MRC IEU\\)", "Health Sciences - Population Health Sciences", df$Primary)
   
   # Add MRC taxonomy column
   if(df$Unit == "MRC"){
@@ -39,7 +45,7 @@ read_survey <- function(path, pattern){
   df = df %>%
     mutate(Discipline = NA) %>%
     mutate(Discipline = ifelse(MRC_Taxonomy == "Physiological Systems" | MRC_Taxonomy == "Molecular and Cellular" | Primary == "Babraham" | Primary == "Life Sciences - School of Biological Sciences" | Primary == "Life Sciences - School of Biochemistry" | Primary == "Life Sciences - School of Psychological Science", "Life Sciences",
-                               ifelse(MRC_Taxonomy == "Population and Public Health" | Primary == "Health Sciences - Population Health Sciences" | Primary == "Health Sciences - Translational Health Sciences" | Primary == "Health Sciences - Bristol Medical School" | Primary == "Health Sciences - Bristol Dental School" | Primary == "Health Sciences - Bristol Veterinary School", "Health Sciences", NA)))
+                               ifelse(MRC_Taxonomy == "Population and Public Health" | Primary == "Health Sciences - Translational Health Sciences" | Primary == "Health Sciences - Bristol Medical School" | Primary == "Health Sciences - Bristol Dental School" | Primary == "Health Sciences - Bristol Veterinary School" | Primary == "Health Sciences - Population Health Sciences", "Health Sciences", NA)))
   
   return(df)
 }
