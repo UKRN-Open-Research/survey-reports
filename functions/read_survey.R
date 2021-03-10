@@ -20,26 +20,26 @@ read_survey <- function(path, pattern){
   # Remove previews, incomplete and spam from responses
   df = df %>% filter(Progress == 100 & Status != "Survey Preview" & Status != "Spam")
   
-  # Add MRC taxonomy to replace Primary column
+  # Change MRC data from Bristol school to UoB
+  df = df %>%
+    mutate(Unit = ifelse(Primary == "MRC Integrative Epidemiology Unit at the University of Bristol (MRC IEU)", "UoB", Unit))
+  
+  # Add MRC taxonomy column
   if(df$Unit == "MRC"){
     df = df %>%
       merge(mrc_group, by = "Primary", all.x = TRUE) %>%
-      select(2:12, 44, 13:43) %>%
-      rename(Primary = UnitClean)
+      select(2:12, 1, 13:44) %>%
+      rename(MRC_Taxonomy = UnitClean)
+  } else{
+    df = df %>%
+      mutate(MRC_Taxonomy = NA)
   }
-  
-  # If NA, change to Not Reported
-  df[is.na(df)] <- "Not Reported"
-  
-  # Change MRC data from Bristol school to UoB
-   df = df %>%
-     mutate(Unit = ifelse(Primary == "Health Sciences - Population Health Sciences", "UoB", Unit))
   
   # Format research discipline
   df = df %>%
     mutate(Discipline = NA) %>%
-    mutate(Discipline = ifelse(Primary == "Physiological Systems" | Primary == "Molecular and Cellular" | Primary == "Babraham" | Primary == "Life Sciences - School of Biological Sciences" | Primary == "Life Sciences - School of Biochemistry" | Primary == "Life Sciences - School of Psychological Science", "Life Sciences",
-                               ifelse(Primary == "Population and Public Health" | Primary == "Health Sciences - Population Health Sciences" | Primary == "Health Sciences - Translational Health Sciences" | Primary == "Health Sciences - Bristol Medical School" | Primary == "Health Sciences - Bristol Dental School" | Primary == "Health Sciences - Bristol Veterinary School", "Health Sciences", "Not Reported")))
+    mutate(Discipline = ifelse(MRC_Taxonomy == "Physiological Systems" | MRC_Taxonomy == "Molecular and Cellular" | Primary == "Babraham" | Primary == "Life Sciences - School of Biological Sciences" | Primary == "Life Sciences - School of Biochemistry" | Primary == "Life Sciences - School of Psychological Science", "Life Sciences",
+                               ifelse(MRC_Taxonomy == "Population and Public Health" | Primary == "Health Sciences - Population Health Sciences" | Primary == "Health Sciences - Translational Health Sciences" | Primary == "Health Sciences - Bristol Medical School" | Primary == "Health Sciences - Bristol Dental School" | Primary == "Health Sciences - Bristol Veterinary School", "Health Sciences", NA)))
   
   return(df)
 }
