@@ -46,7 +46,7 @@ data
 configure
 
 # Logos and branding
-logo.jpg
+logos
 
 # RMarkdown HTML outputs
 *.html
