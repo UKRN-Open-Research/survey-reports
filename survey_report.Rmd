@@ -1,5 +1,5 @@
 ---
-title: "Open Research Survey Report <img src=\"logo.jpg\" alt=\"UKRN logo\" style = \"float: right; \"/>"
+title: "Open Research Survey <img src=\"logos/UKRN_logo.jpg\" alt=\"UKRN logo\" style = \"float: right; padding: 20px;\"/><img src=\"logos/MRC_logo.png\" alt=\"MRC logo\" style = \"float: right; padding: 20px;\"/><img src=\"logos/UoB_logo.png\" alt=\"University of Bristol logo\" style = \"float: right; padding: 20px;\"/>"
 author: "Emma Wilson"
 date: "`r Sys.Date()`"
 output: 
@@ -94,7 +94,7 @@ priority <- format_priority(dat)
 priority_training <- format_priority_training(priority, dat_training)
 ```
 
-# Aim
+# 1. Aim
 This survey aimed to investigate the engagement of health and life sciences researchers with open research practices and training. The results of this survey will be used to inform priorities for researcher training in five different open research areas:
 
   * Open access publishing
@@ -105,7 +105,7 @@ This survey aimed to investigate the engagement of health and life sciences rese
 
 # Survey data
 
-```{r, echo=FALSE, results='asis', warning=FALSE, message=FALSE}
+```{r, echo=FALSE, results="asis", warning=FALSE, message=FALSE}
 # MRC Primary set levels
 if (choose == "mrc"){
   dat$Primary <- factor(dat$Primary,
@@ -167,7 +167,7 @@ p2_2 <- count(dat, Leadership) %>%
 
 if(choose == "all"){
   # Number of responses text
-  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions, The University of Bristol, and The Babraham Institute. \n\n')
+  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions, The University of Bristol, and The Babraham Institute. \n\n ')
   # Plots
   grid.arrange(p1, p2, nrow = 1, widths = c(4, 2))
   # Plot caption
