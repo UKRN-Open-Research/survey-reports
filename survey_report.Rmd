@@ -243,7 +243,9 @@ In the survey, respondents could suggest up to three additional open research ar
   * **Experimental design** -- this training could be considered as part of a primer sries or background information related to the research workflow.
 
 # 5. Summary of free text responses
-Free text responses given in the survey are summarised below. These responses are from health and life sciences researchers across the University of Bristol, MRC-funded organisations, and the Babraham Institute, and may not reflect the views of researchers at any particular organisation. Responses were grouped into seven key areas:
+The final section of this report presents a summary of the free-text fields in the survey. Respondents could enter free text to suggest additional topics for training and additional contents for existing topics. They could also explain their suggestions and add further information for each topic. These free text responses were reviewed by two people who identified the key themes and agreed on the summary presented below.
+
+The responses are from health and life sciences researchers across the University of Bristol, MRC-funded organisations, and the Babraham Institute, and may not reflect the views of researchers at any particular organisation. Responses were grouped into seven key areas:
 
   * Culture, leadership and institutional requirements
   * Systemic issues, e.g. funding and publishing models
