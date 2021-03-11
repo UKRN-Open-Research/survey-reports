@@ -31,26 +31,13 @@ source("functions/format_leadership.R")         # Format MajorleadershipRole for
 source("functions/format_priority.R")           # Format OR area priority responses
 source("functions/format_priority_training.R")  # Format OR area priority responses (subset)
 source("functions/format_training.R")           # Format training responses for graph
-source("functions/read_survey.R")               # Read in and format survey data
 # KnitR
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
 ```{r data, include=FALSE}
-# Clean column text
-col_order <- read_csv("data-helpers/colOrder.csv")
-# MRC taxonomy
-mrc_group <- read_csv("data-helpers/mrcTaxonomy.csv")
-
-# Read in survey data
-dat_mrc <- read_survey("data", "MRC") # MRC-funded institutions
-dat_uob <- read_survey("data", "UoB") # University of Bristol
-dat_bab <- read_survey("data", "Babraham") # Babraham Institute
-# Bind into one dataframe
-dat <- rbind(dat_mrc, dat_uob, dat_bab)
-
-# Clear environment
-rm(col_order, dat_bab, dat_mrc, dat_uob, mrc_group)
+# Read in data
+dat <- read_csv("data/survey_data.csv")
 
 # Select relevant data
 if(choose == "all"){
