@@ -92,8 +92,36 @@ plot_leadership <- function(df){
   
 }
 
+plot_training <- function(dat_all_training, df){
+  
+  p3 <- dat_all_training %>% group_by(OR_Area, Training) %>% count(Response) %>%   
+    ggplot(aes(x = Training, y = n, fill = forcats::fct_rev(Response)))+
+    geom_bar(stat = "identity", position = "stack") +
+    facet_grid(~ OR_Area) +
+    scale_fill_manual(name = "Response", values = c("#28295B", "#4E4F86", "#EC008C", "#6e6e6e", "#13A89E")) +
+    theme(legend.position="bottom", legend.text = element_text(size = 7)) +
+    xlab("Would Find Training Useful") + ylab("Number of Responses") +
+    ylim(0, nrow(df)) +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    geom_text(aes(label = n, group = OR_Area, Training), size = 3, position = position_stack(vjust = 0.5, reverse = TRUE), color = "white")
+  
+  return(p3)
+  
+}
 
-
-
+plot_training_provided <- function(dat_training_provided, df){
+  
+  p4 <- count(dat_training_provided, OR_Area) %>%
+    ggplot(aes(x = OR_Area, y = n, label = n)) +
+    geom_bar(fill = "#13A89E", stat = "identity") +
+    xlab("Open Research Area") + ylab("Number of Responses") +
+    ylim(0, nrow(df)) +
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
+    geom_text(size = 3, position = position_stack(vjust = 0.5), color = "white") +
+    theme(plot.title = element_text(hjust = 0.5))
+  
+  return(p4)
+  
+}
 
 
