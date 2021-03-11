@@ -27,7 +27,7 @@ library(icons)
 #download_academicons()
 # Functions
 source("functions/format_distribution.R")       # Create a histogram of responses
-source("functions/format_leadership.R")         # Format MajorleadershipRole for graph
+source("functions/format_leadership.R")           # Format leadership
 source("functions/format_priority.R")           # Format OR area priority responses
 source("functions/format_priority_training.R")  # Format OR area priority responses (subset)
 source("functions/format_training.R")           # Format training responses for graph
@@ -52,14 +52,7 @@ if(choose == "all"){
 ```
 
 ```{r format-fuctions, include=FALSE}
-# Column factors
-dat$Discipline <- as.factor(dat$Discipline)
-dat$MRC_Taxonomy <- as.factor(dat$MRC_Taxonomy)
-
-# Change factor levels (eadership role)
-dat$MajorLeadershipRole <- factor(dat$MajorLeadershipRole,
-                                  levels = c("Yes",
-                                             "No"))
+dat <- format_leadership(dat)
 
 # Subset and format responses from those who want training
 dat_training <- format_training(dat, training = "Yes")
@@ -139,8 +132,8 @@ p1_3 <- count(dat, Discipline) %>%
   geom_text(aes(group = Discipline), size = 3, position = position_stack(vjust = 0.5), color = "white") +
   theme(plot.title = element_text(hjust = 0.5))
 
-p2 <- count(dat, MajorLeadershipRole) %>%
-  ggplot(aes(x = MajorLeadershipRole, y = n, label = n)) +
+p2 <- count(dat, Leadership) %>%
+  ggplot(aes(x = Leadership, y = n, label = n)) +
   geom_bar(fill = "#13A89E", stat = "identity") +
   ylim(0, nrow(dat)) +
   xlab("Leadership role\n(b)") + ylab("Number of Responses") +
@@ -148,8 +141,8 @@ p2 <- count(dat, MajorLeadershipRole) %>%
   geom_text(size = 3, position = position_stack(vjust = 0.5), color = "white") +
   theme(plot.title = element_text(hjust = 0.5))
 
-p2_2 <- count(dat, MajorLeadershipRole) %>%
-  ggplot(aes(x = MajorLeadershipRole, y = n, label = n)) +
+p2_2 <- count(dat, Leadership) %>%
+  ggplot(aes(x = Leadership, y = n, label = n)) +
   geom_bar(fill = "#13A89E", stat = "identity") +
   ylim(0, nrow(dat)) +
   xlab("Leadership role") + ylab("Number of Responses") +
@@ -159,28 +152,28 @@ p2_2 <- count(dat, MajorLeadershipRole) %>%
 
 if(choose == "all"){
   # Number of responses text
-  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions, The University of Bristol, and The Babraham Institute. \n\n ')
+  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions, The University of Bristol, and The Babraham Institute. \n\n<h2>Survey dissemination</h2>\nMRC researchers were reached via MRC Institution leads. A central MRC response strongly encouraged responding, and several Institues were given personal follow-up by the project steering group members.\nUniversity of Bristol researchers were reached via department heads.\nBabharam Institute researchers were reached via their institute head.\n\n')
   # Plots
   grid.arrange(p1, p2, nrow = 1, widths = c(4, 2))
   # Plot caption
   cat('\n\n<em><b>Figure 1: Breakdown of survey responses</b> by organisation and research discipline (a) and by leadership role (b). A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.</em>\n\n')
 } else if(choose == "mrc"){
   # Number of responses text
-  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions. \n\n')
+  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions. \n\nh2>Survey dissemination</h2>\nMRC researchers were reached via MRC Institution leads. A central MRC response strongly encouraged responding, and several Institues were given personal follow-up by the project steering group members.\n\n')
   # Plots
   grid.arrange(p1_2, p2, nrow = 1, widths = c(4, 2))
   # Plot caption
   cat('\n\n<em><b>Figure 1: Breakdown of survey responses</b> by research domain taxonomy and discipline (a) and by leadership role (b). A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.</em>\n\n')
 } else if(choose == "uob"){
   # Number of responses text
-  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at The University of Bristol.')
+  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at The University of Bristol.h2>Survey dissemination</h2>\nUniversity of Bristol researchers were reached via department heads.\n\n')
   # Plot
   grid.arrange(p1_3, p2, nrow = 1, widths = c(2, 2))
   # Plot caption
   cat('\n\n<em><b>Figure 1: Breakdown of survey responses</b> by research discipline (a) and by leadership role (b). A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.</em>\n\n')
 } else if(choose == "babraham"){
   # Number of responses text
-  cat('This report summarises', nrow(dat), 'survey responses from life sciences researchers at The Babraham Institute.')
+  cat('This report summarises', nrow(dat), 'survey responses from life sciences researchers at The Babraham Institute. \n\nh2>Survey dissemination</h2>\nBabharam Institute researchers were reached via their institute head.')
   # Plot
   grid.arrange(p2, nrow = 1, widths = c(2))
   # Plot caption
@@ -201,14 +194,15 @@ dat_all_training %>% group_by(OR_Area, Training) %>% count(Response) %>%
   scale_fill_manual(name = "Response", values = c("#28295B", "#4E4F86", "#EC008C", "#6e6e6e", "#13A89E")) +
   theme(legend.position="bottom", legend.text = element_text(size = 7)) +
   xlab("Would Find Training Useful") + ylab("Number of Responses") +
+  ylim(0, nrow(dat)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   geom_text(aes(label = n, group = OR_Area, Training), size = 3, position = position_stack(vjust = 0.5, reverse = TRUE), color = "white")
 ```
 
-<em><b>Figure 2: Breakdown of responses related to training in the five open research areas.</b> Respondents could select from multiple answers, so responses were limited as follows: if a respondent said they would not find training useful, but said their institution provided sufficient training, it was marked as such. If the selected they neither wanted training nor thought their institution provided sufficient training, they were marked based on familiarity. If a respondent said they would find training useful but did not state their familiarity with the open research area, they were marked as having unknown familiarity.</em>
+<em><b>Figure 2: Breakdown of responses related to training in the five open research areas.</b> Respondents could select from multiple answers, so responses were coded as follows: if a respondent said they would not find training useful, but said their institution provided sufficient training, it was marked as such. If the selected they neither wanted training nor thought their institution provided sufficient training, they were marked based on familiarity. If a respondent said they would find training useful but did not state their familiarity with the open research area, they were marked as having unknown familiarity.</em>
 
 # Priority of training topics
-Survey respondents were asked to rank in order of priority the open research areas they think researchers would most benefit from. They could select from the five open research areas and up to three additonal areas of their choice. Only `r length(unique(priority$randomID))` repondents completed this section.
+Survey respondents were asked which open research areas they thought should be most prioritised for researcher training. To do this, they were asked to rank the five open research areas we had suggested (open access, open code, data sharing, preprints and preregistration) and could suggest an additional three open research areas in an optional free text field. Only `r length(unique(priority$randomID))` repondents completed this section.
 
 ```{r priority-plot, echo=FALSE}
 priority %>% group_by(OR_Area) %>% count(Rank) %>%
@@ -218,6 +212,7 @@ priority %>% group_by(OR_Area) %>% count(Rank) %>%
                     values = c("#28295B", "#4E4F86", "#13A89E", "#ed68b7", "#EC008C", "#6e6e6e")) +
   theme(legend.position="right") +
   xlab("Open Research Areas") + ylab("Number of Responses") +
+  ylim(0, length(unique(priority$randomID))) +
   theme(plot.title = element_text(hjust = 0.5)) +
   geom_text(aes(group = OR_Area, label = n), size = 3, position = position_stack(vjust = 0.5, reverse = FALSE), color = "white")
 ```
@@ -234,6 +229,7 @@ priority_training %>% group_by(OR_Area) %>% count(Rank) %>%
                     values = c("#28295B", "#4E4F86", "#13A89E", "#ed68b7", "#EC008C", "#6e6e6e")) +
   theme(legend.position="right") +
   xlab("Open Research Areas") + ylab("Number of Responses") +
+  ylim(0, length(unique(priority$randomID))) +
   theme(plot.title = element_text(hjust = 0.5)) +
   geom_text(aes(group = OR_Area, label = n), size = 3, position = position_stack(vjust = 0.5, reverse = FALSE), color = "white")
 ```
@@ -241,7 +237,7 @@ priority_training %>% group_by(OR_Area) %>% count(Rank) %>%
 <em><b>Figure 4: Priority ranking of each of the five open research areas, subsetted to only show responses from researchers who would find training in each area useful.</b> 1 is the highest priority and 8 is the lowest. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
 
 ## Suggested additional open research areas
-Responents suggested and ranked in their top five priority training areas the following additional open research areas:
+In the survey, respondents could suggest up to three additional open research areas not covered by open access, open code, data sharing, preprints, and preregistration. Respondents suggested and ranked within their top five priority training areas, the following additional open research areas:
 
   * **Legal, ethics and governance** -- this training might be relevant for senior researchers and organisation managers, and could address the call for training lead researchers on the value of open research practices.
   * **Experimental design** -- this training could be considered as part of a primer sries or background information related to the research workflow.
