@@ -23,6 +23,15 @@ format_leadership <- function(df, MajorLeadershipRole){
                           levels = c("Yes",
                                      "No"))
   
+  # Set levels for MRC
+  if (choose == "mrc"){
+    dat$MRC_Taxonomy <- factor(dat$MRC_Taxonomy,
+                               levels = c("Molecular and Cellular",
+                                          "Physiological Systems",
+                                          "Population and Public Health",
+                                          NA))
+  }
+  
   return(df)
   
 }
