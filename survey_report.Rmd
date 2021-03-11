@@ -49,12 +49,17 @@ if(choose == "all"){
 } else if(choose == "babraham"){
   dat <- filter(dat, Unit == "Babraham")
 }
+```
 
-# Discipline column factors
+```{r format-fuctions, include=FALSE}
+# Column factors
 dat$Discipline <- as.factor(dat$Discipline)
+dat$MRC_Taxonomy <- as.factor(dat$MRC_Taxonomy)
 
-# Format MajorLeadership Role Column
-dat <- format_leadership(dat)
+# Change factor levels (eadership role)
+dat$MajorLeadershipRole <- factor(dat$MajorLeadershipRole,
+                                  levels = c("Yes",
+                                             "No"))
 
 # Subset and format responses from those who want training
 dat_training <- format_training(dat, training = "Yes")
@@ -93,14 +98,14 @@ This survey aimed to investigate the engagement of health and life sciences rese
 # Survey data
 
 ```{r, echo=FALSE, results="asis", warning=FALSE, message=FALSE}
-# MRC Primary set levels
+# Set levels for MRC
 if (choose == "mrc"){
-  dat$Primary <- factor(dat$Primary,
-                        levels = c("Molecular and Cellular",
-                                   "Physiological Systems",
-                                   "Population and Public Health",
-                                   "Not Reported"))
-}
+  dat$MRC_Taxonomy <- factor(dat$MRC_Taxonomy,
+                             levels = c("Molecular and Cellular",
+                                        "Physiological Systems",
+                                        "Population and Public Health",
+                                        NA))
+  }
 
 p1 <- dat %>% group_by(Discipline) %>% count(Unit) %>%
   ggplot(aes(x = Unit, y = n, label = n)) +
@@ -134,8 +139,8 @@ p1_3 <- count(dat, Discipline) %>%
   geom_text(aes(group = Discipline), size = 3, position = position_stack(vjust = 0.5), color = "white") +
   theme(plot.title = element_text(hjust = 0.5))
 
-p2 <- count(dat, Leadership) %>%
-  ggplot(aes(x = Leadership, y = n, label = n)) +
+p2 <- count(dat, MajorLeadershipRole) %>%
+  ggplot(aes(x = MajorLeadershipRole, y = n, label = n)) +
   geom_bar(fill = "#13A89E", stat = "identity") +
   ylim(0, nrow(dat)) +
   xlab("Leadership role\n(b)") + ylab("Number of Responses") +
@@ -143,8 +148,8 @@ p2 <- count(dat, Leadership) %>%
   geom_text(size = 3, position = position_stack(vjust = 0.5), color = "white") +
   theme(plot.title = element_text(hjust = 0.5))
 
-p2_2 <- count(dat, Leadership) %>%
-  ggplot(aes(x = Leadership, y = n, label = n)) +
+p2_2 <- count(dat, MajorLeadershipRole) %>%
+  ggplot(aes(x = MajorLeadershipRole, y = n, label = n)) +
   geom_bar(fill = "#13A89E", stat = "identity") +
   ylim(0, nrow(dat)) +
   xlab("Leadership role") + ylab("Number of Responses") +
