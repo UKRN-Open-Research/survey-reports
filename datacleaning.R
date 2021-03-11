@@ -5,7 +5,6 @@
 # Aims:
 # * Read in raw data
 # * Remove columns not required for data deposit
-# * Minimally clean data for analysis
 
 # --- SET UP ----------------------------------------------------------------------------------
 
@@ -13,6 +12,9 @@ library(tidyverse)                 # Tidyverse packages
 source("functions/read_survey.R")  # Read in and format survey data
 
 # --- READ IN RAW DATA ------------------------------------------------------------------------
+# Minimal data cleaning is performed to replace column names with more readable column names.
+# Unit, MRC_Taxonomy, and Discipline are also added.
+
 
 # Clean column text
 col_order <- read_csv("data-helpers/colOrder.csv")
@@ -32,3 +34,7 @@ rm(col_order, dat_bab, dat_mrc, dat_uob, mrc_group)
 # --- REMOVE NOT REQUIRED COLUMNS -------------------------------------------------------------
 
 dat <- select(dat, -Progress, -Status, -Finished, -ResponseId, -DistributionChannel, -UserLanguage)
+
+# --- WRITE DATA TO CSV -----------------------------------------------------------------------
+
+write.csv(dat, "data/survey_data.csv", row.names = F)
