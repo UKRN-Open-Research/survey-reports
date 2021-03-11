@@ -19,6 +19,7 @@ choose <- c("all", "mrc", "uob", "babraham")[1]
 library(forcats)      # For factor reverse
 library(grid)         # Plot arrangement
 library(gridExtra)    # Plot arrangement
+library(scales)       # For date_format
 library(tidyverse)    # Tidyverse packages
 # Icons
 #remotes::install_github("mitchelloharawild/icons")
@@ -27,7 +28,8 @@ library(icons)
 #download_academicons()
 # Functions
 source("functions/format_distribution.R")       # Create a histogram of responses
-source("functions/format_leadership.R")           # Format leadership
+source("functions/format_leadership.R")         # Format leadership
+source("functions/plots.R")                     # Generate plots
 source("functions/format_priority.R")           # Format OR area priority responses
 source("functions/format_priority_training.R")  # Format OR area priority responses (subset)
 source("functions/format_training.R")           # Format training responses for graph
@@ -51,8 +53,18 @@ if(choose == "all"){
 }
 ```
 
-```{r format-fuctions, include=FALSE}
+```{r fuction-format, include=FALSE}
+# Leadership graph
 dat <- format_leadership(dat)
+
+# Set levels for MRC
+if (choose == "mrc"){
+  dat$MRC_Taxonomy <- factor(dat$MRC_Taxonomy,
+                             levels = c("Molecular and Cellular",
+                                        "Physiological Systems",
+                                        "Population and Public Health",
+                                        NA))
+  }
 
 # Subset and format responses from those who want training
 dat_training <- format_training(dat, training = "Yes")
@@ -79,6 +91,13 @@ priority <- format_priority(dat)
 priority_training <- format_priority_training(priority, dat_training)
 ```
 
+```{r function-plots, include=FALSE}
+p1 <- plot_responsesovertime(dat) # Responses over time (Figure 1)
+p2_a <-plot_discipline(dat) # Discipline (Figure 2a)
+p2_b <- plot_leadership(dat) # Leadership (Figure 2b)
+```
+
+
 # 1. Aim
 This survey aimed to investigate the engagement of health and life sciences researchers with open research practices and training. The results of this survey will be used to inform priorities for researcher training in five different open research areas:
 
@@ -90,94 +109,62 @@ This survey aimed to investigate the engagement of health and life sciences rese
 
 # 2. Survey data
 
-```{r, echo=FALSE, results="asis", warning=FALSE, message=FALSE}
-# Set levels for MRC
-if (choose == "mrc"){
-  dat$MRC_Taxonomy <- factor(dat$MRC_Taxonomy,
-                             levels = c("Molecular and Cellular",
-                                        "Physiological Systems",
-                                        "Population and Public Health",
-                                        NA))
-  }
-
-p1 <- dat %>% group_by(Discipline) %>% count(Unit) %>%
-  ggplot(aes(x = Unit, y = n, label = n)) +
-  geom_bar(aes(fill = Discipline), stat = "identity") +
-  scale_fill_manual(values = c("#28295B", "#4E4F86", "#6e6e6e")) +
-  ylim(0, nrow(dat)) +
-  theme(legend.position="right", legend.text = element_text(size = 7)) +
-  xlab("Organisation\n(a)") + ylab("Number of Responses") +
-  geom_text(aes(group = Discipline), size = 3, position = position_stack(vjust = 0.5), color = "white") +
-  theme(plot.title = element_text(hjust = 0.5))
-
-p1_2 <- dat %>% group_by(Discipline) %>% count(Primary) %>%
-  ggplot(aes(x = Primary, y = n, label = n)) +
-  geom_bar(aes(fill = Discipline), stat = "identity") +
-  scale_fill_manual(values = c("#28295B", "#4E4F86", "#6e6e6e")) +
-  ylim(0, nrow(dat)) +
-  theme(legend.position="right", legend.text = element_text(size = 7)) +
-  xlab("Research Domain Taxonomy\n(a)") + ylab("Number of Responses") +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
-  geom_text(aes(group = Discipline), size = 3, position = position_stack(vjust = 0.5), color = "white") +
-  theme(plot.title = element_text(hjust = 0.5))
-
-p1_3 <- count(dat, Discipline) %>%
-  ggplot(aes(x = Discipline, y = n, label = n)) +
-  geom_bar(aes(fill = Discipline), stat = "identity") +
-  scale_fill_manual(values = c("#28295B", "#4E4F86", "#6e6e6e")) +
-  ylim(0, nrow(dat)) +
-  theme(legend.position="none", legend.text = element_text(size = 7)) +
-  xlab("Research Discipline\n(a)") + ylab("Number of Responses") +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
-  geom_text(aes(group = Discipline), size = 3, position = position_stack(vjust = 0.5), color = "white") +
-  theme(plot.title = element_text(hjust = 0.5))
-
-p2 <- count(dat, Leadership) %>%
-  ggplot(aes(x = Leadership, y = n, label = n)) +
-  geom_bar(fill = "#13A89E", stat = "identity") +
-  ylim(0, nrow(dat)) +
-  xlab("Leadership role\n(b)") + ylab("Number of Responses") +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
-  geom_text(size = 3, position = position_stack(vjust = 0.5), color = "white") +
-  theme(plot.title = element_text(hjust = 0.5))
-
-p2_2 <- count(dat, Leadership) %>%
-  ggplot(aes(x = Leadership, y = n, label = n)) +
-  geom_bar(fill = "#13A89E", stat = "identity") +
-  ylim(0, nrow(dat)) +
-  xlab("Leadership role") + ylab("Number of Responses") +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
-  geom_text(size = 3, position = position_stack(vjust = 0.5), color = "white") +
-  theme(plot.title = element_text(hjust = 0.5))
-
+```{r echo=FALSE, results="asis", warning=FALSE, message=FALSE}
+# Number of responses text
 if(choose == "all"){
-  # Number of responses text
-  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions, The University of Bristol, and The Babraham Institute. \n\n<h2>2.1 Survey dissemination</h2>\nMRC researchers were reached via MRC Institution leads. A central MRC response strongly encouraged responding, and several Institues were given personal follow-up by the project steering group members.\nUniversity of Bristol researchers were reached via department heads.\nBabharam Institute researchers were reached via their institute head.\n\n')
-  # Plots
-  grid.arrange(p1, p2, nrow = 1, widths = c(4, 2))
-  # Plot caption
-  cat('\n\n<em><b>Figure 1: Breakdown of survey responses</b> by organisation and research discipline (a) and by leadership role (b). A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.</em>\n\n')
+  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions, The University of Bristol, and The Babraham Institute.\n\n')
 } else if(choose == "mrc"){
-  # Number of responses text
-  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions. \n\n<h2>2.1 Survey dissemination</h2>\nMRC researchers were reached via MRC Institution leads. A central MRC response strongly encouraged responding, and several Institues were given personal follow-up by the project steering group members.\n\n')
-  # Plots
-  grid.arrange(p1_2, p2, nrow = 1, widths = c(4, 2))
-  # Plot caption
-  cat('\n\n<em><b>Figure 1: Breakdown of survey responses</b> by research domain taxonomy and discipline (a) and by leadership role (b). A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.</em>\n\n')
+  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at Medical Research Council (MRC)-funded institutions.\n\n')
 } else if(choose == "uob"){
-  # Number of responses text
-  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at The University of Bristol.<h2>2.1 Survey dissemination</h2>\nUniversity of Bristol researchers were reached via department heads.\n\n')
-  # Plot
-  grid.arrange(p1_3, p2, nrow = 1, widths = c(2, 2))
-  # Plot caption
-  cat('\n\n<em><b>Figure 1: Breakdown of survey responses</b> by research discipline (a) and by leadership role (b). A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.</em>\n\n')
+  cat('This report summarises', nrow(dat), 'survey responses from life and health sciences researchers at The University of Bristol.\n\n')
 } else if(choose == "babraham"){
-  # Number of responses text
-  cat('This report summarises', nrow(dat), 'survey responses from life sciences researchers at The Babraham Institute. \n\nh2>2.1 Survey dissemination</h2>\nBabharam Institute researchers were reached via their institute head.')
-  # Plot
-  grid.arrange(p2, nrow = 1, widths = c(2))
-  # Plot caption
-  cat('\n\n<em><b>Figure 1: Breakdown of survey responses from researchers by leadership role.</b> A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.</em>\n\n')
+  cat('This report summarises', nrow(dat), 'survey responses from life sciences researchers at The Babraham Institute.\n\n')
+} else {
+  cat('Error: Please choose a valid data breakdown.')
+}
+```
+
+## 2.1 Survey dissemination
+
+```{r, echo=FALSE, results="asis", warning=FALSE, message=FALSE}
+# Dissemination text
+if(choose == "all"){
+  cat('MRC researchers were reached via MRC Institution leads. A central MRC response strongly encouraged responding, and several Institues were given personal follow-up by the project steering group members.University of Bristol researchers were reached via department heads.Babharam Institute researchers were reached via their institute head.\n\n')
+} else if(choose == "mrc"){
+  cat('MRC researchers were reached via MRC Institution leads. A central MRC response strongly encouraged responding, and several Institues were given personal follow-up by the project steering group members.\n\n')
+} else if(choose == "uob"){
+  cat('University of Bristol researchers were reached via department heads.\n\n')
+} else if(choose == "babraham"){
+  cat('Babharam Institute researchers were reached via their institute head.\n\n')
+} else {
+  cat('Error: Please choose a valid data breakdown.')
+}
+```
+
+## 2.2 Survey Responses
+
+```{r, echo=FALSE}
+# Plot responses over time
+p1
+```
+
+
+## 2.3 Respondent demographics
+
+```{r, echo=FALSE, results="asis", warning=FALSE, message=FALSE}
+#Demographics plots and captions
+if(choose == "all"){
+  grid.arrange(p2_a, p2_b, nrow = 1, widths = c(4, 2))
+  cat('\n\n<em><b>Figure 2: Breakdown of survey responses</b> by organisation and research discipline (a) and by leadership role (b). A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.</em>\n\n')
+} else if(choose == "mrc"){
+  grid.arrange(p2_a, p2_b, nrow = 1, widths = c(4, 2))
+  cat('\n\n<em><b>Figure 2: Breakdown of survey responses</b> by research domain taxonomy and discipline (a) and by leadership role (b). A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.</em>\n\n')
+} else if(choose == "uob"){
+  grid.arrange(p2_a, p2_b, nrow = 1, widths = c(2, 2))
+  cat('\n\n<em><b>Figure 2: Breakdown of survey responses</b> by research discipline (a) and by leadership role (b). A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.</em>\n\n')
+} else if(choose == "babraham"){
+  grid.arrange(p2_b, nrow = 1, widths = c(2))
+  cat('\n\n<em><b>Figure 2: Breakdown of survey responses from researchers by leadership role.</b> A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.</em>\n\n')
 } else {
   cat('Error: Please choose a valid data breakdown.')
 }
@@ -199,7 +186,7 @@ dat_all_training %>% group_by(OR_Area, Training) %>% count(Response) %>%
   geom_text(aes(label = n, group = OR_Area, Training), size = 3, position = position_stack(vjust = 0.5, reverse = TRUE), color = "white")
 ```
 
-<em><b>Figure 2: Breakdown of responses related to training in the five open research areas.</b> Respondents could select from multiple answers, so responses were coded as follows: if a respondent said they would not find training useful, but said their institution provided sufficient training, it was marked as such. If the selected they neither wanted training nor thought their institution provided sufficient training, they were marked based on familiarity. If a respondent said they would find training useful but did not state their familiarity with the open research area, they were marked as having unknown familiarity.</em>
+<em><b>Figure 3: Breakdown of responses related to training in the five open research areas.</b> Respondents could select from multiple answers, so responses were coded as follows: if a respondent said they would not find training useful, but said their institution provided sufficient training, it was marked as such. If the selected they neither wanted training nor thought their institution provided sufficient training, they were marked based on familiarity. If a respondent said they would find training useful but did not state their familiarity with the open research area, they were marked as having unknown familiarity.</em>
 
 # 4. Priority of training topics
 Survey respondents were asked which open research areas they thought should be most prioritised for researcher training. To do this, they were asked to rank the five open research areas we had suggested (open access, open code, data sharing, preprints and preregistration) and could suggest an additional three open research areas in an optional free text field. Only `r length(unique(priority$randomID))` repondents completed this section.
@@ -217,7 +204,9 @@ priority %>% group_by(OR_Area) %>% count(Rank) %>%
   geom_text(aes(group = OR_Area, label = n), size = 3, position = position_stack(vjust = 0.5, reverse = FALSE), color = "white")
 ```
 
-<em><b>Figure 3: Priority ranking of each of the five open research areas.</b> 1 is the highest priority and 8 is the lowest. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
+<em><b>Figure 4: Priority ranking of each of the five open research areas.</b> 1 is the highest priority and 8 is the lowest. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
+
+
 
 A graph showing how the subset of respondents who said they would find open research training useful ranked the priority of research training in that area is shown in figure 4.
 
@@ -234,7 +223,7 @@ priority_training %>% group_by(OR_Area) %>% count(Rank) %>%
   geom_text(aes(group = OR_Area, label = n), size = 3, position = position_stack(vjust = 0.5, reverse = FALSE), color = "white")
 ```
 
-<em><b>Figure 4: Priority ranking of each of the five open research areas, subsetted to only show responses from researchers who would find training in each area useful.</b> 1 is the highest priority and 8 is the lowest. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
+<em><b>Figure 5: Priority ranking of each of the five open research areas, subsetted to only show responses from researchers who would find training in each area useful.</b> 1 is the highest priority and 8 is the lowest. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
 
 ## 4.1 Suggested additional open research areas
 In the survey, respondents could suggest up to three additional open research areas not covered by open access, open code, data sharing, preprints, and preregistration. Respondents suggested and ranked within their top five priority training areas, the following additional open research areas:
@@ -265,17 +254,7 @@ Many responses complained that open research practices take time to implement, t
 Some respondents appeared confused by the terms used in the survey - particularly 'open code', which we defined as applying to materials and formalised procedures other than computer software, but which were understandably interpreted differently.
 
 ## 5.4 Workshop contents
-In general, respondents would like workshops to cover specific types of research, using specific examples and providing templates that researchers can use to put their learning into practice. Many respondents feel that, of the currently available open research workshops they have access to, information on how to implement open research practices to projects using qualitative data is neglected.
-
-In relation to open access publishing, respondents would like to know about plan-S and identifying appropriate journals and funding routes. 
-
-In open code workshops, respondents would like to learn about accessible tools, e.g. Python over paid-for tools like MATLAB), licensing and how much code to make public. 
-
-For data sharing, respondents would like workshops to cover the different types of repositories available to them, legislation such as GDPR, guidance on data management plans, and to what extent they can practice data sharing if they would with restricted or sensitive data. 
-
-In relation to preprints, respondents wanted information on the impact publishing preprints has on journal publishing, and if DOIs can carry through from preprint to full publication. 
-
-Finally, respondents would like preregistration workshops to cover the tradeoffs between preregistering and prematurely disclosing research ideas and avoiding the discouragement of data exploration.
+In general, respondents would like workshops to cover specific types of research, using specific examples and providing templates that researchers can use to put their learning into practice. Many respondents feel that, of the currently available open research workshops they have access to, information on how to implement open research practices to projects using qualitative data is neglected. In relation to open access publishing, respondents would like to know about plan-S and identifying appropriate journals and funding routes. In open code workshops, respondents would like to learn about accessible tools, e.g. Python over paid-for tools like MATLAB), licensing and how much code to make public. For data sharing, respondents would like workshops to cover the different types of repositories available to them, legislation such as GDPR, guidance on data management plans, and to what extent they can practice data sharing if they would with restricted or sensitive data. In relation to preprints, respondents wanted information on the impact publishing preprints has on journal publishing, and if DOIs can carry through from preprint to full publication. Finally, respondents would like preregistration workshops to cover the tradeoffs between preregistering and prematurely disclosing research ideas and avoiding the discouragement of data exploration.
 
 ## 5.5 Workshop structure and design
 There was some support for training that provided specific step-by-step guidance rather than training that raised awareness of a practice. Specific, practical training was requested.
