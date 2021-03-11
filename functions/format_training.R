@@ -25,7 +25,7 @@ format_training <- function(df, training){
       select(OpenAccess, OpenCode, OpenData, Preprints, Preregistration, Primary, Unit, randomID) %>%
       pivot_longer(cols = OpenAccess:Preregistration, names_to = "OR_Area", values_to = "Response") %>%
       filter(!grepl("I would find training on this useful", Response)) %>%
-      filter(!Response == "Not Reported") %>%
+      filter(!is.na(Response)) %>%
       mutate(Training = "No")
     
     # Format text responses by organisation provides and/or familiarity

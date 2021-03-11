@@ -4,7 +4,7 @@ format_priority <- function(df){
   df = df %>%
     select(Priority_OpenAccess, Priority_OpenCode, Priority_OpenData, Priority_Preprints, Priority_Preregistration, randomID) %>%
     mutate_if(is.integer, as.character) %>%
-    filter(!Priority_OpenAccess == "Not Reported")
+    filter(!is.na(Priority_OpenAccess))
   
   # Group those ranked 6-8
   df$Priority_OpenAccess <- sub("6|7|8", "6-8", df$Priority_OpenAccess)
