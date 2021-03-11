@@ -21,11 +21,14 @@ read_survey <- function(path, pattern){
   df$Primary = trimws(df$Primary, which = "right", whitespace = "[ \t\r\n]")
   
   # Remove previews, incomplete and spam from responses
-  df = df %>% filter(Progress == 100 & Status != "Survey Preview" & Status != "Spam")
+  df = df %>% filter(Progress == 100 & Status != "Survey Preview" & Status != "Spam" & !is.na(OpenAccess))
   
   # Change MRC data from Bristol school to UoB
-  df = df %>%
-    mutate(Unit = ifelse(Primary == "MRC Integrative Epidemiology Unit at the University of Bristol (MRC IEU)", "UoB", Unit))
+  if(df$Unit == "MRC"){
+    df = df %>%
+      mutate(Unit = ifelse(Primary == "MRC Integrative Epidemiology Unit at the University of Bristol (MRC IEU)", "UoB", Unit))
+    df$Unit[is.na(df$Unit)] <- "MRC"
+  }
   
   # Format UoB list rest
   df$Primary <- sub("MRC Integrative Epidemiology Unit at the University of Bristol \\(MRC IEU\\)", "Health Sciences - Population Health Sciences", df$Primary)
@@ -42,10 +45,25 @@ read_survey <- function(path, pattern){
   }
   
   # Format research discipline
-  df = df %>%
-    mutate(Discipline = NA) %>%
-    mutate(Discipline = ifelse(MRC_Taxonomy == "Physiological Systems" | MRC_Taxonomy == "Molecular and Cellular" | Primary == "Babraham" | Primary == "Life Sciences - School of Biological Sciences" | Primary == "Life Sciences - School of Biochemistry" | Primary == "Life Sciences - School of Psychological Science", "Life Sciences",
-                               ifelse(MRC_Taxonomy == "Population and Public Health" | Primary == "Health Sciences - Translational Health Sciences" | Primary == "Health Sciences - Bristol Medical School" | Primary == "Health Sciences - Bristol Dental School" | Primary == "Health Sciences - Bristol Veterinary School" | Primary == "Health Sciences - Population Health Sciences", "Health Sciences", NA)))
+  if(pattern == "MRC"){
+    df = df %>%
+      mutate(Discipline = ifelse(Unit == "MRC", MRC_Taxonomy, Primary))
+  } else if(pattern == "UoB"){
+    df = df %>%
+      mutate(Discipline = Primary)
+  } else if(pattern == "Babraham"){
+    df = df %>%
+      mutate(Discipline = "Life Sciences")
+  } else{
+    df = df %>%
+      mutate(Discipline = "ERROR")
+  }
+  
+  df$Discipline <- replace(df$Discipline, grep("Life Sciences", df$Discipline), "Life Sciences")
+  df$Discipline <- replace(df$Discipline, grep("Health Sciences", df$Discipline), "Health Sciences")
+  df$Discipline <- replace(df$Discipline, grep("Physiological Systems", df$Discipline), "Life Sciences")
+  df$Discipline <- replace(df$Discipline, grep("Molecular and Cellular", df$Discipline), "Life Sciences")
+  df$Discipline <- replace(df$Discipline, grep("Population and Public Health", df$Discipline), "Health Sciences")
   
   return(df)
 }
