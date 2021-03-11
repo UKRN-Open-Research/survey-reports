@@ -21,7 +21,7 @@ read_survey <- function(path, pattern){
   df$Primary = trimws(df$Primary, which = "right", whitespace = "[ \t\r\n]")
   
   # Remove previews, incomplete and spam from responses
-  df = df %>% filter(Progress == 100 & Status != "Survey Preview" & Status != "Spam" & !is.na(OpenAccess))
+  df = df %>% filter(Progress == 100 & Status != "Survey Preview" & Status != "Spam")
   
   # Change MRC data from Bristol school to UoB
   if(df$Unit == "MRC"){
