@@ -4,7 +4,7 @@ format_training_familiarity <- function(df, training){
     
     # Subset responses of those who want training
     df = df %>%
-      select(OpenAccess, OpenCode, OpenData, Preprints, Preregistration, Primary, Unit, randomID) %>%
+      select(OpenAccess, OpenCode, DataSharing, Preprints, Preregistration, Primary, Unit, randomID) %>%
       pivot_longer(cols = OpenAccess:Preregistration, names_to = "OR_Area", values_to = "Response") %>%
       filter(grepl("I would find training on this useful", Response)) %>%
       mutate(Training = "Yes")
@@ -21,7 +21,7 @@ format_training_familiarity <- function(df, training){
     
     # Subset responses of those who dont mention wanting training
     df <- df %>%
-      select(OpenAccess, OpenCode, OpenData, Preprints, Preregistration, Primary, Unit, randomID) %>%
+      select(OpenAccess, OpenCode, DataSharing, Preprints, Preregistration, Primary, Unit, randomID) %>%
       pivot_longer(cols = OpenAccess:Preregistration, names_to = "OR_Area", values_to = "Response") %>%
       filter(!grepl("I would find training on this useful", Response)) %>%
       mutate(Training = "No")
@@ -31,6 +31,10 @@ format_training_familiarity <- function(df, training){
     df$Response <- replace(df$Response, grep("I am familiar with this concept", df$Response), "Familiar")
     df$Response <- replace(df$Response, grep("I am NOT familiar with this concept", df$Response), "Not familiar")
     df$Response <- replace(df$Response, grep("I think my organisation already provides sufficient training on this", df$Response), "Unknown familiarity")
+    
+    # Replace NA
+    df$Response <- as.character(df$Response)
+    df$Response[is.na(df$Response)] <- "Unknown familiarity"
     
     return(df)
     
@@ -42,7 +46,7 @@ format_training_familiarity <- function(df, training){
 
 format_training_provided <- function(df){
   df = df %>%
-    select(OpenAccess, OpenCode, OpenData, Preprints, Preregistration, Primary, Unit, randomID) %>%
+    select(OpenAccess, OpenCode, DataSharing, Preprints, Preregistration, Primary, Unit, randomID) %>%
     pivot_longer(cols = OpenAccess:Preregistration, names_to = "OR_Area", values_to = "TrainingProvided") %>%
     filter(grepl("I think my organisation already provides sufficient training on this", TrainingProvided))
   
