@@ -29,8 +29,8 @@ plot_discipline <- function(df){
     
   } else if(choose == "mrc"){
     
-    p2_a <- df %>% group_by(Discipline) %>% count(Primary) %>%
-      ggplot(aes(x = Primary, y = n, label = n)) +
+    p2_a <- df %>% group_by(Discipline) %>% count(MRC_Taxonomy) %>%
+      ggplot(aes(x = MRC_Taxonomy, y = n, label = n)) +
       geom_bar(aes(fill = Discipline), stat = "identity") +
       scale_fill_manual(values = c("#28295B", "#4E4F86", "#6e6e6e")) +
       ylim(0, nrow(df)) +
