@@ -1,5 +1,5 @@
 ---
-title: "Open Research Survey <img src=\"logos/UKRN_logo.jpg\" alt=\"UKRN logo\" style = \"float: right; padding: 20px;\"/><img src=\"logos/MRC_logo.png\" alt=\"MRC logo\" style = \"float: right; padding: 20px;\"/><img src=\"logos/UoB_logo.png\" alt=\"University of Bristol logo\" style = \"float: right; padding: 20px;\"/>"
+title: "Open Research Survey <img src=\"logos/UKRN_logo.jpg\" alt=\"UKRN logo\" style = \"float: right; padding-left: 20px;\"/><img src=\"logos/MRC_logo.png\" alt=\"MRC logo\" style = \"float: right; padding-left: 20px;\"/><img src=\"logos/UoB_logo.png\" alt=\"University of Bristol logo\" style = \"float: right; padding-left: 20px;\"/>"
 author: "Emma Wilson"
 date: "`r Sys.Date()`"
 output: 
@@ -40,6 +40,9 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 # Read in data
 dat <- read_csv("data/survey_data.csv")
 
+# Change OpenData --> DataSharing
+colnames(dat) <- gsub("OpenData", "DataSharing", colnames(dat))
+
 # Select relevant data
 if(choose == "all"){
   dat <- dat
@@ -66,8 +69,7 @@ dat_all_training <- rbind(dat_training, dat_no_training) %>%
 
 # Factor levels
 dat_all_training$Response <- factor(dat_all_training$Response,
-                                    levels = c(NA,
-                                               "Unknown familiarity",
+                                    levels = c("Unknown familiarity",
                                                "Not familiar",
                                                "Familiar",
                                                "Already engage"))
@@ -121,29 +123,32 @@ if(choose == "all"){
 ```{r, echo=FALSE, results="asis", warning=FALSE, message=FALSE}
 # Dissemination text
 if(choose == "all"){
-  cat('MRC researchers were reached via MRC Institution leads. A central MRC response strongly encouraged responding, and several Institues were given personal follow-up by the project steering group members. University of Bristol researchers were reached via department heads. Babharam Institute researchers were reached via their institute head.\n\n')
+  cat('MRC researchers were reached via MRC Institution leads. A central MRC response strongly encouraged responding, and several Institutes were given personal follow-up by the project steering group members. University of Bristol researchers were reached via department heads. Babraham Institute researchers were reached via their institute head.\n\n')
 } else if(choose == "mrc"){
-  cat('MRC researchers were reached via MRC Institution leads. A central MRC response strongly encouraged responding, and several Institues were given personal follow-up by the project steering group members.\n\n')
+  cat('MRC researchers were reached via MRC Institution leads. A central MRC response strongly encouraged responding, and several Institutes were given personal follow-up by the project steering group members.\n\n')
 } else if(choose == "uob"){
   cat('University of Bristol researchers were reached via department heads.\n\n')
 } else if(choose == "babraham"){
-  cat('Babharam Institute researchers were reached via their institute head.\n\n')
+  cat('Babraham Institute researchers were reached via their institute head.\n\n')
 } else {
   cat('Error: Please choose a valid data breakdown.')
 }
 ```
 
 ## 2.2 Survey Responses
-Survey responses were collected between January and Feburary 2021.
+Survey responses were collected between January and February 2021. Most responses were received in January (Fig 1).
 
 ```{r, echo=FALSE}
 # Plot responses over time
 p1
 ```
 
+<em><b>Figure 1: Number of responses over time.</b></em>
 
 ## 2.3 Respondent demographics
 Survey respondents were asked to self-report which organisation they belonged to and if they had a leadership role within their organisation. A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.
+
+Most responses came from MRC-funded institutes and researchers in the health sciences domain (Fig 2a). Additionally, most survey respondents did not have a major leadership role.
 
 
 ```{r, echo=FALSE, results="asis", warning=FALSE, message=FALSE}
@@ -166,25 +171,31 @@ if(choose == "all"){
 ```
 
 # 3. Open research training
-Survey respondents were asked to describe their familiaty with the five open research areas, and whether they thought training would be useful.
+Survey respondents were asked to describe their familiarity with the five open research areas, and whether they thought the training would be useful.
+
+Most respondents would find training in data sharing useful (Fig 3). Additionally, the majority of survey respondents were familiar or already engaged in open access and data sharing practices, however a large proportion were not familiar with open code and preregistration.
 
 ```{r training-plot, echo=FALSE}
 # Plot training and familiarity
 p3
 ```
 
-<em><b>Figure 3: Breakdown of responses related to training in the five open research areas.</b> Respondents could select from multiple answers, so responses were coded as follows: if a respondent said they would not find training useful, but said their institution provided sufficient training, it was marked as such. If the selected they neither wanted training nor thought their institution provided sufficient training, they were marked based on familiarity. If a respondent said they would find training useful but did not state their familiarity with the open research area, they were marked as having unknown familiarity.</em>
+<em><b>Figure 3: Breakdown of responses related to training in the five open research areas.</b> Respondents could select from multiple answers, so responses were coded as follows: respondents who said they were both familiar and engaged in an open research area were marked as 'Already engage'. Respondents who did not state their familiarity were marked as 'Unknown familiarity'.</em>
 
-They were also asked if they thought their institution already provided sufficent training in the five open research areas.
+## 3.1 Training already provided
+In the same survey question as the previous, survey respondents were asked if they thought their institution provided sufficient training in each open research area. Very few respondents said they did (Fig 4).
 
 ```{r training-provided-plot, echo=FALSE}
 # Plot training provided
 p4
 ```
 
+<em><b>Figure 4: Respondents who thought sufficient training already provided by institution.</b></em>
 
 # 4. Priority of training topics
-Survey respondents were asked which open research areas they thought should be most prioritised for researcher training. To do this, they were asked to rank the five open research areas we had suggested (open access, open code, data sharing, preprints and preregistration) and could suggest an additional three open research areas in an optional free text field. Only `r length(unique(priority$randomID))` repondents completed this section.
+Survey respondents were asked which open research areas they thought should be most prioritised for researcher training. To do this, they were asked to rank the five open research areas we had suggested (open access, open code, data sharing, preprints and preregistration) and could suggest an additional three open research areas in an optional free-text field. Only `r length(unique(priority$randomID))` respondents completed this section.
+
+Out of the five open research areas, data sharing was ranked the number one priority for researcher training by the most survey respondents (Fig 5).
 
 ```{r priority-plot, echo=FALSE}
 priority %>% group_by(OR_Area) %>% count(Rank) %>%
@@ -199,9 +210,9 @@ priority %>% group_by(OR_Area) %>% count(Rank) %>%
   geom_text(aes(group = OR_Area, label = n), size = 3, position = position_stack(vjust = 0.5, reverse = FALSE), color = "white")
 ```
 
-<em><b>Figure 4: Priority ranking of each of the five open research areas.</b> 1 is the highest priority and 8 is the lowest. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
+<em><b>Figure 5: Priority ranking of each of the five open research areas.</b> 1 is the highest priority and 8 is the lowest. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
 
-A graph showing how the subset of respondents who said they would find open research training useful ranked the priority of research training in that area is shown in figure 4.
+The distribution of priority rankings across the five research areas is retained when only responses from researchers who would find training in each area useful were considered (Fig 6).
 
 ```{r priority-training-plot, echo=FALSE}
 priority_training %>% group_by(OR_Area) %>% count(Rank) %>%
@@ -216,16 +227,16 @@ priority_training %>% group_by(OR_Area) %>% count(Rank) %>%
   geom_text(aes(group = OR_Area, label = n), size = 3, position = position_stack(vjust = 0.5, reverse = FALSE), color = "white")
 ```
 
-<em><b>Figure 5: Priority ranking of each of the five open research areas, subsetted to only show responses from researchers who would find training in each area useful.</b> 1 is the highest priority and 8 is the lowest. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
+<em><b>Figure 6: Priority ranking of each of the five open research areas from only the respondents who would find training in each area useful.</b> 1 is the highest priority and 8 is the lowest. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
 
 ## 4.1 Suggested additional open research areas
 In the survey, respondents could suggest up to three additional open research areas not covered by open access, open code, data sharing, preprints, and preregistration. Respondents suggested and ranked within their top five priority training areas, the following additional open research areas:
 
   * **Legal, ethics and governance** -- this training might be relevant for senior researchers and organisation managers, and could address the call for training lead researchers on the value of open research practices.
-  * **Experimental design** -- this training could be considered as part of a primer sries or background information related to the research workflow.
+  * **Experimental design** -- this training could be considered as part of a primer series or background information related to the research workflow.
 
-# 5. Summary of free text responses
-The final section of this report presents a summary of the free-text fields in the survey. Respondents could enter free text to suggest additional topics for training and additional contents for existing topics. They could also explain their suggestions and add further information for each topic. These free text responses were reviewed by two people who identified the key themes and agreed on the summary presented below.
+# 5. Summary of free-text responses
+The final section of this report presents a summary of the free-text fields in the survey. Respondents could enter free-text to suggest additional topics for training and additional contents for existing topics. They could also explain their suggestions and add further information for each topic. These free-text responses were reviewed by two people who identified the key themes and agreed on the summary presented below.
 
 The responses are from health and life sciences researchers across the University of Bristol, MRC-funded organisations, and the Babraham Institute, and may not reflect the views of researchers at any particular organisation. Responses were grouped into seven key areas:
 
