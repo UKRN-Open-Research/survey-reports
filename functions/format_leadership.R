@@ -3,9 +3,17 @@ format_leadership <- function(df, MajorLeadershipRole){
   # Mutate new column
   df <- mutate(df, Leadership = MajorLeadershipRole)
   
-  # Column factors
-  dat$Discipline <- as.factor(dat$Discipline)
-  dat$MRC_Taxonomy <- as.factor(dat$MRC_Taxonomy)
+  # Replace NA
+  df$Discipline <- as.character(df$Discipline)
+  df$Discipline[is.na(df$Discipline)] <- "Not Reported"
+  
+  # Replace NA
+  df$MRC_Taxonomy <- as.character(df$MRC_Taxonomy)
+  df$MRC_Taxonomy[is.na(df$MRC_Taxonomy)] <- "Not Reported"
+  
+  # Replace NA
+  df$Leadership <- as.character(df$Leadership)
+  df$Leadership[is.na(df$Leadership)] <- "Not Reported"
   
   # Group
   df$Leadership <- sub("I do not have a major leadership role,Other", "No", df$Leadership)
@@ -25,11 +33,11 @@ format_leadership <- function(df, MajorLeadershipRole){
   
   # Set levels for MRC
   if (choose == "mrc"){
-    dat$MRC_Taxonomy <- factor(dat$MRC_Taxonomy,
+    df$MRC_Taxonomy <- factor(df$MRC_Taxonomy,
                                levels = c("Molecular and Cellular",
                                           "Physiological Systems",
                                           "Population and Public Health",
-                                          NA))
+                                          "Not Reported"))
   }
   
   return(df)
