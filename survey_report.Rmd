@@ -90,6 +90,8 @@ p2_a <-plot_discipline(dat) # Discipline (Figure 2a)
 p2_b <- plot_leadership(dat) # Leadership (Figure 2b)
 p3 <- plot_training(dat_all_training, dat) # Training and familiarity (Figure 3)
 p4 <- plot_training_provided(dat_training_provided, dat) # Training provided (Figure 4)
+p5 <- plot_priority(priority) # Priority rank (Figure 5)
+p6 <- plot_priotity_training(priority_training, priority) # Priority rank of training useful only (Figure 6)
 ```
 
 # 1. Aim
@@ -148,21 +150,22 @@ p1
 ## 2.3 Respondent demographics
 Survey respondents were asked to self-report which organisation they belonged to and if they had a leadership role within their organisation. A major leadership role was defined as running a group/lab, directing a school/organisation, or similar.
 
-Most responses came from MRC-funded institutes and researchers in the health sciences domain (Fig 2a). Additionally, most survey respondents did not have a major leadership role.
-
-
 ```{r, echo=FALSE, results="asis", warning=FALSE, message=FALSE}
 #Demographics plots and captions
 if(choose == "all"){
+  cat('Most responses came from MRC-funded institutes and researchers in the health sciences domain (Fig 2a). Additionally, most survey respondents did not have a major leadership role (Fig 2b).\n\n')
   grid.arrange(p2_a, p2_b, nrow = 1, widths = c(4, 2))
   cat('\n\n<em><b>Figure 2: Breakdown of survey responses</b> by organisation and research discipline (a) and by leadership role (b).</em>\n\n')
 } else if(choose == "mrc"){
+  cat('Most responses came from researchers in the population and public health and health sciences domain (Fig 2a). Additionally, most survey respondents did not have a major leadership role (Fig 2b).\n\n')
   grid.arrange(p2_a, p2_b, nrow = 1, widths = c(4, 2))
   cat('\n\n<em><b>Figure 2: Breakdown of survey responses</b> by research domain taxonomy and discipline (a) and by leadership role (b).</em>\n\n')
 } else if(choose == "uob"){
+  cat('Most responses came from researchers in the health sciences domain (Fig 2a). Additionally, most survey respondents did not have a major leadership role (Fig 2b).\n\n')
   grid.arrange(p2_a, p2_b, nrow = 1, widths = c(2, 2))
   cat('\n\n<em><b>Figure 2: Breakdown of survey responses</b> by research discipline (a) and by leadership role (b).</em>\n\n')
 } else if(choose == "babraham"){
+  cat('Most survey respondents did not have a major leadership role (Fig 2).\n\n')
   grid.arrange(p2_b, nrow = 1, widths = c(2))
   cat('\n\n<em><b>Figure 2: Breakdown of survey responses from researchers by leadership role.</b></em>\n\n')
 } else {
@@ -173,7 +176,20 @@ if(choose == "all"){
 # 3. Open research training
 Survey respondents were asked to describe their familiarity with the five open research areas, and whether they thought the training would be useful.
 
-Most respondents would find training in data sharing useful (Fig 3). Additionally, the majority of survey respondents were familiar or already engaged in open access and data sharing practices, however a large proportion were not familiar with open code and preregistration.
+```{r, echo=FALSE, results="asis", warning=FALSE, message=FALSE}
+# Dissemination text
+if(choose == "all"){
+  cat('Most respondents would find training in data sharing useful (Fig 3). Additionally, the majority of survey respondents were familiar or already engaged in open access and data sharing practices, however a large proportion were not familiar with open code and preregistration.\n\n')
+} else if(choose == "mrc"){
+  cat('Most respondents would find training in data sharing useful (Fig 3). Additionally, the majority of survey respondents were familiar or already engaged in open access, data sharing, and publishing preprints. However a large proportion were not familiar with open code and preregistration.\n\n')
+} else if(choose == "uob"){
+  cat('Most respondents would find training in data sharing useful (Fig 3). Additionally, the majority of survey respondents were familiar or already engaged in open access, data sharing, and publishing preprints. However a large proportion were not familiar with open code and preregistration.\n\n')
+} else if(choose == "babraham"){
+  cat('Most respondents would find training in data sharing useful (Fig 3). Additionally, the majority of survey respondents were familiar or already engaged in open access, data sharing, and publishing preprints. However a large proportion were not familiar with open code and preregistration.\n\n')
+} else {
+  cat('Error: Please choose a valid data breakdown.')
+}
+```
 
 ```{r training-plot, echo=FALSE}
 # Plot training and familiarity
@@ -198,16 +214,8 @@ Survey respondents were asked which open research areas they thought should be m
 Out of the five open research areas, data sharing was ranked the number one priority for researcher training by the most survey respondents (Fig 5).
 
 ```{r priority-plot, echo=FALSE}
-priority %>% group_by(OR_Area) %>% count(Rank) %>%
-  ggplot(aes(x = OR_Area, y = n, fill = forcats::fct_rev(Rank))) +
-  geom_bar(stat = "identity", position = "stack") +
-  scale_fill_manual(name = "Rank", 
-                    values = c("#28295B", "#4E4F86", "#13A89E", "#ed68b7", "#EC008C", "#6e6e6e")) +
-  theme(legend.position="right") +
-  xlab("Open Research Areas") + ylab("Number of Responses") +
-  ylim(0, length(unique(priority$randomID))) +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  geom_text(aes(group = OR_Area, label = n), size = 3, position = position_stack(vjust = 0.5, reverse = FALSE), color = "white")
+# Plot priority rank
+p5
 ```
 
 <em><b>Figure 5: Priority ranking of each of the five open research areas.</b> 1 is the highest priority and 8 is the lowest. Where an area has been ranked 6-8, the number of responses is aggregated.</em>
@@ -215,16 +223,8 @@ priority %>% group_by(OR_Area) %>% count(Rank) %>%
 The distribution of priority rankings across the five research areas is retained when only responses from researchers who would find training in each area useful were considered (Fig 6).
 
 ```{r priority-training-plot, echo=FALSE}
-priority_training %>% group_by(OR_Area) %>% count(Rank) %>%
-  ggplot(aes(x = OR_Area, y = n, fill = forcats::fct_rev(Rank))) +
-  geom_bar(stat = "identity", position = "stack") +
-  scale_fill_manual(name = "Rank", 
-                    values = c("#28295B", "#4E4F86", "#13A89E", "#ed68b7", "#EC008C", "#6e6e6e")) +
-  theme(legend.position="right") +
-  xlab("Open Research Areas") + ylab("Number of Responses") +
-  ylim(0, length(unique(priority$randomID))) +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  geom_text(aes(group = OR_Area, label = n), size = 3, position = position_stack(vjust = 0.5, reverse = FALSE), color = "white")
+# Plot priority rank of only those who would find training useful
+p6
 ```
 
 <em><b>Figure 6: Priority ranking of each of the five open research areas from only the respondents who would find training in each area useful.</b> 1 is the highest priority and 8 is the lowest. Where an area has been ranked 6-8, the number of responses is aggregated.</em>

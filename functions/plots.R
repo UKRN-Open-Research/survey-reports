@@ -125,4 +125,32 @@ plot_training_provided <- function(dat_training_provided, df){
   
 }
 
+plot_priority <- function(priority){
+  
+  p5 <- priority %>% group_by(OR_Area) %>% count(Rank) %>%
+    ggplot(aes(x = OR_Area, y = n, fill = forcats::fct_rev(Rank))) +
+    geom_bar(stat = "identity", position = "stack") +
+    scale_fill_manual(name = "Rank", 
+                      values = c("#28295B", "#4E4F86", "#13A89E", "#ed68b7", "#EC008C", "#6e6e6e")) +
+    theme(legend.position="right") +
+    xlab("Open Research Areas") + ylab("Number of Responses") +
+    ylim(0, length(unique(priority$randomID))) +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    geom_text(aes(group = OR_Area, label = n), size = 3, position = position_stack(vjust = 0.5, reverse = FALSE), color = "white")
+  
+}
 
+plot_priotity_training <- function(priority_training, priority){
+  
+  priority_training %>% group_by(OR_Area) %>% count(Rank) %>%
+    ggplot(aes(x = OR_Area, y = n, fill = forcats::fct_rev(Rank))) +
+    geom_bar(stat = "identity", position = "stack") +
+    scale_fill_manual(name = "Rank", 
+                      values = c("#28295B", "#4E4F86", "#13A89E", "#ed68b7", "#EC008C", "#6e6e6e")) +
+    theme(legend.position="right") +
+    xlab("Open Research Areas") + ylab("Number of Responses") +
+    ylim(0, length(unique(priority$randomID))) +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    geom_text(aes(group = OR_Area, label = n), size = 3, position = position_stack(vjust = 0.5, reverse = FALSE), color = "white")
+  
+}
