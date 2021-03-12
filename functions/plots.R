@@ -6,7 +6,8 @@ plot_responsesovertime <- function(df){
     ggplot(aes(x = RecordedDate, y = n)) +
     geom_bar(aes(fill = n), stat="identity") +
     labs(x="Date", y = "Number of responses") +
-    scale_fill_gradient(low = "#6e6fb5", high = "#28295B")
+    scale_fill_gradient(low = "#6e6fb5", high = "#28295B") +
+    theme(legend.title = element_blank())
   
   return(p1)
   
