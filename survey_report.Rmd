@@ -1,5 +1,5 @@
 ---
-title: "Open Research Survey <img src=\"logos/UKRN_logo.jpg\" alt=\"UKRN logo\" style = \"float: right; padding-left: 20px;\"/><img src=\"logos/MRC_logo.png\" alt=\"MRC logo\" style = \"float: right; padding-left: 20px;\"/><img src=\"logos/UoB_logo.png\" alt=\"University of Bristol logo\" style = \"float: right; padding-left: 20px;\"/>"
+title: "Open Research Survey Report <img src=\"logos/UKRN_logo.jpg\" alt=\"UKRN logo\" style = \"float: right; padding-left: 20px;\"/><img src=\"logos/MRC_logo.png\" alt=\"MRC logo\" style = \"float: right; padding-left: 20px;\"/><img src=\"logos/UoB_logo.png\" alt=\"University of Bristol logo\" style = \"float: right; padding-left: 20px;\"/>"
 author: "Emma Wilson"
 date: "`r Sys.Date()`"
 output: 
