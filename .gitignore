@@ -42,9 +42,6 @@ vignettes/*.pdf
 # Data folders
 data
 
-# Configure files
-configure
-
 # Logos and branding
 logos
 
