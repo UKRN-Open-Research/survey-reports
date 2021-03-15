@@ -1,6 +1,9 @@
 # Open Research Training Survey Reports
 Automatically generate summary reports of UKRN Open Research Training survey data.
 
+## Download data
+Data will be deposited at data.bris, the University of Bristol's research data depository.
+
 ## Project / file structure
 The R Project should be set up as follows:
 
