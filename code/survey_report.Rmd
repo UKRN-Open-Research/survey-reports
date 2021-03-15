@@ -5,12 +5,9 @@ date: "`r Sys.Date()`"
 output: 
     html_document:
       theme: cosmo
+params: 
+  output_dir: "../foobar"
 ---
-
-```{r select, include=FALSE}
-# Choose the data to run the report on
-choose <- c("all", "mrc", "uob", "babraham")[1]
-```
 
 ---
 
@@ -32,13 +29,15 @@ source("functions/plots.R")                     # Generate plots
 source("functions/format_priority.R")           # Format OR area priority responses
 source("functions/format_priority_training.R")  # Format OR area priority responses (subset)
 source("functions/format_training.R")           # Format training responses for graph
+# Set output directory
+output_dir <- params$output_dir
 # KnitR
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
 ```{r data, include=FALSE}
 # Read in data
-dat <- read_csv("data/survey_data.csv")
+dat <- read_csv("data/2021-03-12_Open_Research_Survey_Data_Sheet.csv")
 
 # Change OpenData --> DataSharing
 colnames(dat) <- gsub("OpenData", "DataSharing", colnames(dat))
