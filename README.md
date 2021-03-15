@@ -4,32 +4,32 @@ Automatically generate summary reports of UKRN Open Research Training survey dat
 ## Project / file structure
 The R Project should be set up as follows:
 
-survey-reports.Rproj
-    / code /
-        / data /
-            2021-03-12_Open_Research_Survey_Data_Sheet.csv
-            2021-03-12_Open_Research_Survey_Data_Dictionary.csv
-        / data-helpers /
-            colOrder.csv
-            mrcTaxonomy.csv
-        / functions /
-            format_leadership.R
-            format_priority.R
-            format_priority_training.R
-            format_training.R
-            plots.R
-            read_survey.R
-        data.cleaning.R
-        render-report.R
-        survey-report.Rmd
-    / output /
-        survey_report_alldata.html
-        survey_report_Babrahamdata.html
-        survey_report_Bristoldata.html
-        survey_report_MRCdata.html
-.gitignore
-LICENSE.md
-README.md
+survey-reports.Rproj<br>
+&nbsp;&nbsp;&nbsp;&nbsp;/ code /<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/ data /<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2021-03-12_Open_Research_Survey_Data_Sheet.csv<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2021-03-12_Open_Research_Survey_Data_Dictionary.csv<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/ data-helpers /<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;colOrder.csv<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mrcTaxonomy.csv<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/ functions /<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;format_leadership.R<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;format_priority.R<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;format_priority_training.R<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;format_training.R<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plots.R<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;read_survey.R<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data.cleaning.R<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;render-report.R<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;survey-report.Rmd<br>
+&nbsp;&nbsp;&nbsp;&nbsp;/ output /<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;survey_report_alldata.html<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;survey_report_Babrahamdata.html<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;survey_report_Bristoldata.html<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;survey_report_MRCdata.html<br>
+.gitignore<br>
+LICENSE.md<br>
+README.md<br>
 
 | File name                                           | Description                                                                      |
 | --------------------------------------------------- | -------------------------------------------------------------------------------- |
