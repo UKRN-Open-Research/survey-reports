@@ -16,6 +16,7 @@ params:
 library(forcats)      # For factor reverse
 library(grid)         # Plot arrangement
 library(gridExtra)    # Plot arrangement
+library(here)         # File paths
 library(tidyverse)    # Tidyverse packages
 # Icons
 #remotes::install_github("mitchelloharawild/icons")
@@ -23,7 +24,6 @@ library(icons)
 #download_fontawesome()
 #download_academicons()
 # Functions
-source("functions/format_distribution.R")       # Create a histogram of responses
 source("functions/format_leadership.R")         # Format leadership
 source("functions/plots.R")                     # Generate plots
 source("functions/format_priority.R")           # Format OR area priority responses
@@ -37,7 +37,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 ```{r data, include=FALSE}
 # Read in data
-dat <- read_csv("data/2021-03-12_Open_Research_Survey_Data_Sheet.csv")
+dat <- read_csv(here::here("data", "2021-03-12_Open_Research_Survey_Data_Sheet.csv"))
 
 # Change OpenData --> DataSharing
 colnames(dat) <- gsub("OpenData", "DataSharing", colnames(dat))

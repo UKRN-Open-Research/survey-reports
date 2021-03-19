@@ -14,7 +14,7 @@ output_dir <- "output"
 output <- file.path("..",output_dir)
 
 # Choose the data to run the report on
-choose <- c("all", "mrc", "uob", "babraham")[2]
+choose <- c("all", "mrc", "uob", "babraham")[1]
 
 # Conditionally generate output file name
 if(choose == "all"){

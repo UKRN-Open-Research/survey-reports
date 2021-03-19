@@ -17,14 +17,14 @@ source("code/functions/read_survey.R")  # Read in and format survey data
 
 
 # Clean column text
-col_order <- read_csv("code/data-helpers/colOrder.csv")
+col_order <- read_csv("data-cleaning/data-helpers/colOrder.csv")
 # MRC taxonomy
-mrc_group <- read_csv("code/data-helpers/mrcTaxonomy.csv")
+mrc_group <- read_csv("data-cleaning/data-helpers/mrcTaxonomy.csv")
 
 # Read in survey data
-dat_mrc <- read_survey("code/data", "MRC") # MRC-funded institutions (+ 1 Bristol that is reassigned to UoB)
-dat_uob <- read_survey("code/data", "UoB") # University of Bristol
-dat_bab <- read_survey("code/data", "Babraham") # Babraham Institute
+dat_mrc <- read_survey("data-cleaning/data-raw", "MRC") # MRC-funded institutions (+ 1 Bristol that is reassigned to UoB)
+dat_uob <- read_survey("data-cleaning/data-raw", "UoB") # University of Bristol
+dat_bab <- read_survey("data-cleaning/data-raw", "Babraham") # Babraham Institute
 # Bind into one dataframe
 dat <- rbind(dat_mrc, dat_uob, dat_bab)
 
@@ -37,4 +37,4 @@ dat <- select(dat, -Progress, -Status, -Finished, -ResponseId, -DistributionChan
 
 # --- WRITE DATA TO CSV -----------------------------------------------------------------------
 
-write.csv(dat, "code/data/survey_data.csv", row.names = F)
+write.csv(dat, "data/survey_data.csv", row.names = F)

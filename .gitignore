@@ -42,6 +42,9 @@ vignettes/*.pdf
 # Data folders
 data
 
+# Raw data
+data-cleaning/data-raw
+
 # Logos and branding
 logos
 
