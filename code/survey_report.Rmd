@@ -24,11 +24,11 @@ library(icons)
 #download_fontawesome()
 #download_academicons()
 # Functions
-source("functions/function_format_leadership.R")         # Format leadership
-source("functions/function_plots.R")                     # Generate plots
-source("functions/function_format_priority.R")           # Format OR area priority responses
-source("functions/function_format_priority_training.R")  # Format OR area priority responses (subset)
-source("functions/function_format_training.R")           # Format training responses for graph
+source("functions/format_leadership.R")         # Format leadership
+source("functions/plots.R")                     # Generate plots
+source("functions/format_priority.R")           # Format OR area priority responses
+source("functions/format_priority_training.R")  # Format OR area priority responses (subset)
+source("functions/format_training.R")           # Format training responses for graph
 # Set output directory
 output_dir <- params$output_dir
 # KnitR

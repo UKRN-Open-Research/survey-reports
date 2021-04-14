@@ -9,7 +9,7 @@
 # --- SET UP ----------------------------------------------------------------------------------
 
 library(tidyverse)                      # Tidyverse packages
-source("code/functions/function_read_survey.R")  # Read in and format survey data
+source("data-cleaning/functions/read_survey.R")  # Read in and format survey data
 
 # --- READ IN RAW DATA ------------------------------------------------------------------------
 # Minimal data cleaning is performed to replace column names with more readable column names.
@@ -17,9 +17,9 @@ source("code/functions/function_read_survey.R")  # Read in and format survey dat
 
 
 # Clean column text
-col_order <- read_csv("data-cleaning/data-helpers/colOrder.csv")
+col_order <- read_csv("data-cleaning/data-helpers/clean_columnorder.csv")
 # MRC taxonomy
-mrc_group <- read_csv("data-cleaning/data-helpers/mrcTaxonomy.csv")
+mrc_group <- read_csv("data-cleaning/data-helpers/clean_MRCtaxonomy.csv")
 
 # Read in survey data
 dat_mrc <- read_survey("data-cleaning/data-raw", "MRC") # MRC-funded institutions (+ 1 Bristol that is reassigned to UoB)
