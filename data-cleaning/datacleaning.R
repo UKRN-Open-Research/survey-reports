@@ -9,7 +9,7 @@
 # --- SET UP ----------------------------------------------------------------------------------
 
 library(tidyverse)                      # Tidyverse packages
-source("code/functions/read_survey.R")  # Read in and format survey data
+source("code/functions/function_read_survey.R")  # Read in and format survey data
 
 # --- READ IN RAW DATA ------------------------------------------------------------------------
 # Minimal data cleaning is performed to replace column names with more readable column names.
